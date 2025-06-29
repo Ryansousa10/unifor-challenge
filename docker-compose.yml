@@ -1,0 +1,39 @@
+version: '3.8'
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:21.1
+    environment:
+      KC_DB: postgres
+      KC_DB_URL_HOST: keycloak-db
+      KC_DB_URL_DATABASE: keycloak
+      KC_DB_USERNAME: kc_user
+      KC_DB_PASSWORD: kc_pass
+      KC_ADMIN: admin
+      KC_ADMIN_PASSWORD: admin
+    command: start-dev
+    ports:
+      - "8080:8080"
+
+  keycloak-db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: kc_user
+      POSTGRES_PASSWORD: kc_pass
+
+  unifor-db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: unifor
+      POSTGRES_USER: unifor
+      POSTGRES_PASSWORD: unifor_pass
+
+  backend:
+    build: .
+    ports:
+      - "8081:8080"
+    environment:
+      QUARKUS_PROFILE: dev
+    depends_on:
+      - unifor-db
+      - keycloak
