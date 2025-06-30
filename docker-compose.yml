@@ -2,6 +2,7 @@ version: '3.8'
 services:
   keycloak:
     image: quay.io/keycloak/keycloak:21.1
+    command: start-dev
     environment:
       KC_DB: postgres
       KC_DB_URL_HOST: keycloak-db
@@ -10,9 +11,10 @@ services:
       KC_DB_PASSWORD: kc_pass
       KC_ADMIN: admin
       KC_ADMIN_PASSWORD: admin
-    command: start-dev
     ports:
       - "8080:8080"
+    depends_on:
+      - keycloak-db
 
   keycloak-db:
     image: postgres:15
@@ -20,6 +22,11 @@ services:
       POSTGRES_DB: keycloak
       POSTGRES_USER: kc_user
       POSTGRES_PASSWORD: kc_pass
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:8080/auth/realms/unifor || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   unifor-db:
     image: postgres:15
@@ -27,13 +34,25 @@ services:
       POSTGRES_DB: unifor
       POSTGRES_USER: unifor
       POSTGRES_PASSWORD: unifor_pass
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U unifor -d unifor"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432"
 
   backend:
-    build: .
+    build:
+      context: ./unifor-backend
+      dockerfile: Dockerfile
     ports:
       - "8081:8080"
     environment:
       QUARKUS_PROFILE: dev
+      quarkus.datasource.jdbc.url: jdbc:postgresql://unifor-db:5432/unifor
     depends_on:
-      - unifor-db
-      - keycloak
+      unifor-db:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
