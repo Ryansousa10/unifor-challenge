@@ -3,7 +3,7 @@ package br.com.unifor.domain;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
 import lombok.*;
-
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
@@ -11,11 +11,19 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Role extends PanacheEntityBase {
+@Table(name = "semester")
+public class Semester extends PanacheEntityBase {
+
     @Id
     @GeneratedValue
     private UUID id;
 
     @Column(nullable = false, unique = true, length = 20)
-    private String name; // ADMIN, COORDENADOR, PROFESSOR, ALUNO
+    private String term;
+
+    @Column(name = "start_date", nullable = false)
+    private LocalDate startDate;
+
+    @Column(name = "end_date", nullable = false)
+    private LocalDate endDate;
 }
