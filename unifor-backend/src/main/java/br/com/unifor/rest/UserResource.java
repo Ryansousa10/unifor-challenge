@@ -1,15 +1,9 @@
 package br.com.unifor.rest;
 
 import br.com.unifor.domain.User;
+import io.quarkus.security.Authenticated;
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
@@ -20,7 +14,7 @@ import java.util.UUID;
 
 @Path("/users")
 @Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
+@Authenticated
 public class UserResource {
 
     @GET
@@ -44,7 +38,7 @@ public class UserResource {
     public Response create(User user, @Context UriInfo uriInfo) {
         user.persist();
         URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(user.id.toString())
+                .path(user.getId().toString())
                 .build();
         return Response.created(uri).build();
     }
@@ -57,12 +51,12 @@ public class UserResource {
         if (existing == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        existing.username  = updated.username;
-        existing.password  = updated.password;
-        existing.firstName = updated.firstName;
-        existing.lastName  = updated.lastName;
-        existing.email     = updated.email;
-        existing.roles     = updated.roles;
+        existing.setUsername(updated.getUsername());
+        existing.setPassword(updated.getPassword());
+        existing.setFirstName(updated.getFirstName());
+        existing.setLastName(updated.getLastName());
+        existing.setEmail(updated.getEmail());
+        existing.setRoles(updated.getRoles());
         return Response.ok(existing).build();
     }
 
