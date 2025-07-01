@@ -17,24 +17,30 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Entity
+@Table(name = "users")
 public class User extends PanacheEntityBase {
     @Id
-    public UUID id;
+    @GeneratedValue
+    private UUID id;
 
     @Column(nullable = false, unique = true)
-    public String username;
+    private String username;
 
     @Column(nullable = false)
-    public String password;
+    private String password;
 
-    public String firstName;
-    public String lastName;
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
 
     @Column(unique = true)
-    public String email;
+    private String email;
 
     @CreationTimestamp
-    public Instant createdAt;
+    @Column(name = "created_at")
+    private Instant createdAt;
 
     @ManyToMany
     @JoinTable(
@@ -42,10 +48,5 @@ public class User extends PanacheEntityBase {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    public Set<Role> roles;
-
-    @PrePersist
-    void prePersist() {
-        this.id = UUID.randomUUID();
-    }
+    private Set<Role> roles;
 }
