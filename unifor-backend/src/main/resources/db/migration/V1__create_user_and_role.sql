@@ -12,7 +12,7 @@ INSERT INTO role (name) VALUES
                             ('PROFESSOR'),
                             ('ALUNO');
 
-CREATE TABLE "user" (
+CREATE TABLE users (
                         id         UUID      PRIMARY KEY DEFAULT uuid_generate_v4(),
                         username   VARCHAR(50) NOT NULL UNIQUE,
                         password   VARCHAR(255) NOT NULL,
@@ -22,10 +22,10 @@ CREATE TABLE "user" (
                         created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
 );
 
-COMMENT ON COLUMN "user".created_at IS 'Data e hora de criação do registro';
+COMMENT ON COLUMN users.created_at IS 'Data e hora de criação do registro';
 
 CREATE TABLE user_role (
-                           user_id UUID NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+                           user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
                            role_id UUID NOT NULL REFERENCES role(id) ON DELETE CASCADE,
                            PRIMARY KEY (user_id, role_id)
 );
