@@ -7,7 +7,10 @@ import jakarta.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
-import br.com.unifor.domain.Course;
+import br.com.unifor.dto.CourseRequestDTO;
+import br.com.unifor.dto.CourseResponseDTO;
+import br.com.unifor.service.CourseService;
+import jakarta.inject.Inject;
 
 @Path("/course")
 @Produces(MediaType.APPLICATION_JSON)
@@ -29,51 +32,39 @@ public class CourseResource {
     //
     // Para mais detalhes sobre as decisões, consulte o README.
 
+    @Inject
+    CourseService courseService;
+
     @GET
-    public List<Course> list() {
-        return Course.listAll();
+    public List<CourseResponseDTO> list() {
+        return courseService.listCourses();
     }
 
     @GET
     @Path("{id}")
     public Response get(@PathParam("id") UUID id) {
-        Course c = Course.findById(id);
-        return c != null
-                ? Response.ok(c).build()
-                : Response.status(Response.Status.NOT_FOUND).build();
+        CourseResponseDTO dto = courseService.getCourse(id);
+        return Response.ok(dto).build();
     }
 
     @POST
-    @Transactional
-    public Response create(Course course, @Context UriInfo uriInfo) {
-        course.persist();
-        URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(course.getId().toString())
-                .build();
-        return Response.created(uri).build();
+    public Response create(CourseRequestDTO dto, @Context UriInfo uriInfo) {
+        CourseResponseDTO created = courseService.createCourse(dto);
+        URI uri = uriInfo.getAbsolutePathBuilder().path(created.getId().toString()).build();
+        return Response.created(uri).entity(created).build();
     }
 
     @PUT
-    @Transactional
     @Path("{id}")
-    public Response update(@PathParam("id") UUID id, Course updated) {
-        Course existing = Course.findById(id);
-        if (existing == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        existing.setCode(updated.getCode());
-        existing.setName(updated.getName());
-        existing.setDescription(updated.getDescription());
-        return Response.ok(existing).build();
+    public Response update(@PathParam("id") UUID id, CourseRequestDTO dto) {
+        CourseResponseDTO updated = courseService.updateCourse(id, dto);
+        return Response.ok(updated).build();
     }
 
     @DELETE
-    @Transactional
     @Path("{id}")
     public Response delete(@PathParam("id") UUID id) {
-        boolean deleted = Course.deleteById(id);
-        return deleted
-                ? Response.noContent().build()
-                : Response.status(Response.Status.NOT_FOUND).build();
+        courseService.deleteCourse(id);
+        return Response.noContent().build();
     }
 }

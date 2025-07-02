@@ -1,6 +1,9 @@
 package br.com.unifor.rest;
 
-import br.com.unifor.domain.Role;
+import br.com.unifor.dto.RoleRequestDTO;
+import br.com.unifor.dto.RoleResponseDTO;
+import br.com.unifor.service.RoleService;
+import jakarta.inject.Inject;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -14,6 +17,9 @@ import java.util.UUID;
 @RolesAllowed("ADMIN")
 public class RoleResource {
 
+    @Inject
+    RoleService roleService;
+
     // Recurso REST responsável pelo gerenciamento de perfis (roles) de acesso do sistema.
     // Disponível apenas para usuários com perfil ADMIN, conforme @RolesAllowed.
     // Implementa operações CRUD básicas para a entidade Role.
@@ -24,16 +30,34 @@ public class RoleResource {
     // Para mais detalhes sobre as decisões, consulte o README.
 
     @GET
-    public List<Role> list() {
-        return Role.listAll();
+    public List<RoleResponseDTO> list() {
+        return roleService.listRoles();
     }
 
     @GET
     @Path("{id}")
     public Response get(@PathParam("id") UUID id) {
-        Role role = Role.findById(id);
-        return role != null
-                ? Response.ok(role).build()
-                : Response.status(Response.Status.NOT_FOUND).build();
+        RoleResponseDTO dto = roleService.getRole(id);
+        return Response.ok(dto).build();
+    }
+
+    @POST
+    public Response create(RoleRequestDTO dto) {
+        RoleResponseDTO created = roleService.createRole(dto);
+        return Response.status(Response.Status.CREATED).entity(created).build();
+    }
+
+    @PUT
+    @Path("{id}")
+    public Response update(@PathParam("id") UUID id, RoleRequestDTO dto) {
+        RoleResponseDTO updated = roleService.updateRole(id, dto);
+        return Response.ok(updated).build();
+    }
+
+    @DELETE
+    @Path("{id}")
+    public Response delete(@PathParam("id") UUID id) {
+        roleService.deleteRole(id);
+        return Response.noContent().build();
     }
 }

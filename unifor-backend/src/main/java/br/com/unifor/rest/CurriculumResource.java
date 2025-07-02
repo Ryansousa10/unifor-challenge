@@ -7,7 +7,10 @@ import jakarta.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
-import br.com.unifor.domain.Curriculum;
+import br.com.unifor.dto.CurriculumRequestDTO;
+import br.com.unifor.dto.CurriculumResponseDTO;
+import br.com.unifor.service.CurriculumService;
+import jakarta.inject.Inject;
 
 @Path("/curriculum")
 @Produces(MediaType.APPLICATION_JSON)
@@ -27,55 +30,44 @@ public class CurriculumResource {
     //
     // Para mais detalhes sobre as decisões, consulte o README.
 
+    @Inject
+    CurriculumService curriculumService;
+
     @GET
     @RolesAllowed({"COORDENADOR", "PROFESSOR", "ALUNO", "ADMIN"})
-    public List<Curriculum> list() {
-        return Curriculum.listAll();
+    public List<CurriculumResponseDTO> list() {
+        return curriculumService.listCurriculums();
     }
 
     @GET
     @Path("{id}")
     @RolesAllowed({"COORDENADOR", "PROFESSOR", "ALUNO", "ADMIN"})
     public Response get(@PathParam("id") UUID id) {
-        Curriculum c = Curriculum.findById(id);
-        return c != null
-                ? Response.ok(c).build()
-                : Response.status(Response.Status.NOT_FOUND).build();
+        CurriculumResponseDTO dto = curriculumService.getCurriculum(id);
+        return Response.ok(dto).build();
     }
 
     @POST
     @RolesAllowed({"COORDENADOR", "ADMIN"})
-    @Transactional
-    public Response create(Curriculum curriculum, @Context UriInfo uriInfo) {
-        curriculum.persist();
-        URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(curriculum.getId().toString())
-                .build();
-        return Response.created(uri).build();
+    public Response create(CurriculumRequestDTO dto, @Context UriInfo uriInfo) {
+        CurriculumResponseDTO created = curriculumService.createCurriculum(dto);
+        URI uri = uriInfo.getAbsolutePathBuilder().path(created.getId().toString()).build();
+        return Response.created(uri).entity(created).build();
     }
 
     @PUT
     @Path("{id}")
     @RolesAllowed({"COORDENADOR", "ADMIN"})
-    @Transactional
-    public Response update(@PathParam("id") UUID id, Curriculum updated) {
-        Curriculum existing = Curriculum.findById(id);
-        if (existing == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        existing.setCourse(updated.getCourse());
-        existing.setSemester(updated.getSemester());
-        return Response.ok(existing).build();
+    public Response update(@PathParam("id") UUID id, CurriculumRequestDTO dto) {
+        CurriculumResponseDTO updated = curriculumService.updateCurriculum(id, dto);
+        return Response.ok(updated).build();
     }
 
     @DELETE
     @Path("{id}")
     @RolesAllowed({"COORDENADOR", "ADMIN"})
-    @Transactional
     public Response delete(@PathParam("id") UUID id) {
-        boolean deleted = Curriculum.deleteById(id);
-        return deleted
-                ? Response.noContent().build()
-                : Response.status(Response.Status.NOT_FOUND).build();
+        curriculumService.deleteCurriculum(id);
+        return Response.noContent().build();
     }
 }
