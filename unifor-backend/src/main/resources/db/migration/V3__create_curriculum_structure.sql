@@ -1,7 +1,8 @@
 CREATE TABLE curriculum (
                             id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
                             course_id   UUID NOT NULL REFERENCES course(id) ON DELETE CASCADE,
-                            semester_id UUID NOT NULL REFERENCES semester(id) ON DELETE CASCADE
+                            semester_id UUID NOT NULL REFERENCES semester(id) ON DELETE CASCADE,
+                            CONSTRAINT uq_curriculum_course_semester UNIQUE (course_id, semester_id)
 );
 
 CREATE TABLE curric_disc (
