@@ -46,6 +46,15 @@
   "roles": {
     "realm": [
       {
+        "id": "34a15afd-134a-4b0b-992b-32a1e7a54a6a",
+        "name": "COORDENADOR",
+        "description": "",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "unifor",
+        "attributes": {}
+      },
+      {
         "id": "6b25762c-c4b6-40a0-b301-68fa85245d1e",
         "name": "uma_authorization",
         "description": "${role_uma_authorization}",
@@ -85,9 +94,27 @@
         "attributes": {}
       },
       {
+        "id": "38308ce8-fb83-41a6-8d9e-12d694405289",
+        "name": "PROFESSOR",
+        "description": "",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "unifor",
+        "attributes": {}
+      },
+      {
         "id": "7c7c2581-cdb8-403f-a7a6-8f61946e3531",
         "name": "offline_access",
         "description": "${role_offline-access}",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "unifor",
+        "attributes": {}
+      },
+      {
+        "id": "ffa4539c-ffca-45dc-8187-70c7e70e57eb",
+        "name": "ALUNO",
+        "description": "",
         "composite": false,
         "clientRole": false,
         "containerId": "unifor",
@@ -848,14 +875,14 @@
       },
       "protocolMappers": [
         {
-          "id": "144da3a9-1f09-48e4-8118-b9e03b92dbf7",
-          "name": "audience-unifor-backend",
+          "id": "2670350f-3e9b-43cb-b54f-10fedda93e16",
+          "name": "aud-unifor-backend",
           "protocol": "openid-connect",
           "protocolMapper": "oidc-audience-mapper",
           "consentRequired": false,
           "config": {
             "included.client.audience": "unifor-backend",
-            "id.token.claim": "false",
+            "id.token.claim": "true",
             "access.token.claim": "true"
           }
         }
