@@ -17,6 +17,15 @@ import java.util.UUID;
 @RolesAllowed("ADMIN")
 public class RoleResource {
 
+    // Recurso REST responsável pelo gerenciamento de perfis (roles) de acesso do sistema.
+    // Disponível apenas para usuários com perfil ADMIN, conforme @RolesAllowed.
+    // Implementa operações CRUD básicas para a entidade Role.
+    //
+    // Decisão: O controle de acesso é feito via Keycloak/Quarkus Security, garantindo que apenas administradores possam manipular perfis.
+    // O padrão REST facilita integração com frontend e outros sistemas.
+    //
+    // Para mais detalhes sobre as decisões, consulte o README.
+
     @GET
     public List<Role> list() {
         return Role.listAll();

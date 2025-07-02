@@ -13,6 +13,14 @@ import java.util.UUID;
 @Entity
 @Table(name = "semester")
 public class Semester extends PanacheEntityBase {
+    // Representa um semestre letivo (ex: 2024.1).
+    // Utiliza UUID como identificador e termo único para evitar duplicidade.
+    // O termo segue padrão como "2024.1" ou "2024.2".
+    // As datas de início e fim são obrigatórias para controle de períodos acadêmicos.
+    //
+    // Decisão: O campo 'term' é limitado a 20 caracteres e único.
+    //
+    // Para mais detalhes sobre as decisões, consulte o README.
 
     @Id
     @GeneratedValue
