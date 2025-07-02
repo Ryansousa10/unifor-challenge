@@ -18,8 +18,8 @@ public class Semester extends PanacheEntityBase {
     @GeneratedValue
     private UUID id;
 
-    @Column(nullable = false, unique = true, length = 20)
-    private String term;
+    @Column(name = "name", nullable = false, unique = true, length = 20)
+    private String name;
 
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
