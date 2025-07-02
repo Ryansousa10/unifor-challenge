@@ -14,6 +14,14 @@ import java.util.UUID;
 @IdClass(CurricDiscId.class)
 public class CurricDisc extends PanacheEntityBase {
 
+    // Modela a relação N:N entre Curriculum (matriz curricular) e Discipline (disciplina).
+    // Utiliza chave composta (curriculumId, disciplineId) para garantir unicidade da associação.
+    // O campo 'ordering' define a ordem da disciplina na matriz curricular.
+    //
+    // Decisão: Utiliza @IdClass para chave composta e facilita consultas e manutenção.
+    //
+    // Para mais detalhes sobre as decisões, consulte o README.
+
     @Id
     @Column(name = "curriculum_id")
     private UUID curriculumId;

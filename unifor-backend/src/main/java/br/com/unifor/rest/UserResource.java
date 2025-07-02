@@ -22,6 +22,15 @@ import java.util.stream.Collectors;
 @Authenticated
 public class UserResource {
 
+    // Recurso REST responsável pelo gerenciamento de usuários do sistema.
+    // Disponível apenas para usuários com perfil ADMIN, conforme @RolesAllowed.
+    // Implementa operações CRUD básicas para a entidade User.
+    //
+    // Decisão: O controle de acesso é feito via Keycloak/Quarkus Security, garantindo que apenas administradores possam manipular usuários.
+    // O padrão REST facilita integração com frontend e outros sistemas.
+    //
+    // Para mais detalhes sobre as decisões, consulte o README.
+
     @GET
     @RolesAllowed("ADMIN")
     public List<UserResponseDTO> list() {
