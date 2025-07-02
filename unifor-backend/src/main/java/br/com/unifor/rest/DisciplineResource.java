@@ -7,7 +7,10 @@ import jakarta.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
-import br.com.unifor.domain.Discipline;
+import br.com.unifor.dto.DisciplineRequestDTO;
+import br.com.unifor.dto.DisciplineResponseDTO;
+import br.com.unifor.service.DisciplineService;
+import jakarta.inject.Inject;
 
 
 
@@ -32,52 +35,39 @@ public class DisciplineResource {
     //
     // Para mais detalhes sobre as decisões, consulte o README.
 
+    @Inject
+    DisciplineService disciplineService;
+
     @GET
-    public List<Discipline> list() {
-        return Discipline.listAll();
+    public List<DisciplineResponseDTO> list() {
+        return disciplineService.listDisciplines();
     }
 
     @GET
     @Path("{id}")
     public Response get(@PathParam("id") UUID id) {
-        Discipline d = Discipline.findById(id);
-        return d != null
-                ? Response.ok(d).build()
-                : Response.status(Response.Status.NOT_FOUND).build();
+        DisciplineResponseDTO dto = disciplineService.getDiscipline(id);
+        return Response.ok(dto).build();
     }
 
     @POST
-    @Transactional
-    public Response create(Discipline discipline, @Context UriInfo uriInfo) {
-        discipline.persist();
-        URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(discipline.getId().toString())
-                .build();
-        return Response.created(uri).build();
+    public Response create(DisciplineRequestDTO dto, @Context UriInfo uriInfo) {
+        DisciplineResponseDTO created = disciplineService.createDiscipline(dto);
+        URI uri = uriInfo.getAbsolutePathBuilder().path(created.getId().toString()).build();
+        return Response.created(uri).entity(created).build();
     }
 
     @PUT
-    @Transactional
     @Path("{id}")
-    public Response update(@PathParam("id") UUID id, Discipline updated) {
-        Discipline existing = Discipline.findById(id);
-        if (existing == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        existing.setCode(updated.getCode());
-        existing.setName(updated.getName());
-        existing.setCredits(updated.getCredits());
-        existing.setDescription(updated.getDescription());
-        return Response.ok(existing).build();
+    public Response update(@PathParam("id") UUID id, DisciplineRequestDTO dto) {
+        DisciplineResponseDTO updated = disciplineService.updateDiscipline(id, dto);
+        return Response.ok(updated).build();
     }
 
     @DELETE
-    @Transactional
     @Path("{id}")
     public Response delete(@PathParam("id") UUID id) {
-        boolean deleted = Discipline.deleteById(id);
-        return deleted
-                ? Response.noContent().build()
-                : Response.status(Response.Status.NOT_FOUND).build();
+        disciplineService.deleteDiscipline(id);
+        return Response.noContent().build();
     }
 }

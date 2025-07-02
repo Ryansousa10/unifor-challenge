@@ -1,14 +1,15 @@
 package br.com.unifor.rest;
 
-import br.com.unifor.domain.CurricDiscId;
+import br.com.unifor.dto.CurricDiscRequestDTO;
+import br.com.unifor.dto.CurricDiscResponseDTO;
+import br.com.unifor.service.CurricDiscService;
+import jakarta.inject.Inject;
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
-import br.com.unifor.domain.CurricDisc;
 
 @Path("/curriculum/{curriculumId}/disciplines")
 @Produces(MediaType.APPLICATION_JSON)
@@ -29,47 +30,51 @@ public class CurricDiscResource {
     //
     // Para mais detalhes sobre as decisões, consulte o README.
 
+    @Inject
+    CurricDiscService curricDiscService;
+
     @GET
-    public List<CurricDisc> list(@PathParam("curriculumId") UUID curriculumId) {
-        return CurricDisc.list("curriculumId", curriculumId);
+    public List<CurricDiscResponseDTO> list(@PathParam("curriculumId") UUID curriculumId) {
+        // filtra apenas as disciplinas da matriz curricular informada
+        return curricDiscService.listCurricDiscs().stream()
+            .filter(dto -> dto.getCurriculumId().equals(curriculumId))
+            .toList();
+    }
+
+    @GET
+    @Path("{disciplineId}")
+    public Response get(@PathParam("curriculumId") UUID curriculumId,
+                        @PathParam("disciplineId") UUID disciplineId) {
+        CurricDiscResponseDTO dto = curricDiscService.getCurricDisc(curriculumId, disciplineId);
+        return Response.ok(dto).build();
     }
 
     @POST
-    @Transactional
     public Response create(@PathParam("curriculumId") UUID curriculumId,
-                           CurricDisc disc, @Context UriInfo uriInfo) {
-        disc.setCurriculumId(curriculumId);
-        disc.persist();
-        URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(disc.getDisciplineId().toString())
-                .build();
-        return Response.created(uri).build();
+                           CurricDiscRequestDTO dto,
+                           @Context UriInfo uriInfo) {
+        dto.setCurriculumId(curriculumId);
+        CurricDiscResponseDTO created = curricDiscService.createCurricDisc(dto);
+        URI uri = uriInfo.getAbsolutePathBuilder().path(created.getDisciplineId().toString()).build();
+        return Response.created(uri).entity(created).build();
     }
 
     @PUT
     @Path("{disciplineId}")
-    @Transactional
     public Response update(@PathParam("curriculumId") UUID curriculumId,
-                           @PathParam("disciplineId") UUID disciplineId,
-                           CurricDisc updated) {
-        CurricDiscId key = new CurricDiscId(curriculumId, disciplineId);
-        CurricDisc existing = CurricDisc.findById(key);
-        if (existing == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        existing.setOrdering(updated.getOrdering());
-        return Response.ok(existing).build();
+                          @PathParam("disciplineId") UUID disciplineId,
+                          CurricDiscRequestDTO dto) {
+        dto.setCurriculumId(curriculumId);
+        dto.setDisciplineId(disciplineId);
+        CurricDiscResponseDTO updated = curricDiscService.updateCurricDisc(curriculumId, disciplineId, dto);
+        return Response.ok(updated).build();
     }
 
     @DELETE
     @Path("{disciplineId}")
-    @Transactional
     public Response delete(@PathParam("curriculumId") UUID curriculumId,
-                           @PathParam("disciplineId") UUID disciplineId) {
-        CurricDiscId key = new CurricDiscId(curriculumId, disciplineId);
-        boolean deleted = CurricDisc.deleteById(key);
-        return deleted
-                ? Response.noContent().build()
-                : Response.status(Response.Status.NOT_FOUND).build();
+                          @PathParam("disciplineId") UUID disciplineId) {
+        curricDiscService.deleteCurricDisc(curriculumId, disciplineId);
+        return Response.noContent().build();
     }
 }

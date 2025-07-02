@@ -7,7 +7,10 @@ import jakarta.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
-import br.com.unifor.domain.Semester;
+import br.com.unifor.dto.SemesterRequestDTO;
+import br.com.unifor.dto.SemesterResponseDTO;
+import br.com.unifor.service.SemesterService;
+import jakarta.inject.Inject;
 
 @Path("/semester")
 @Produces(MediaType.APPLICATION_JSON)
@@ -29,51 +32,39 @@ public class SemesterResource {
     //
     // Para mais detalhes sobre as decisões, consulte o README.
 
+    @Inject
+    SemesterService semesterService;
+
     @GET
-    public List<Semester> list() {
-        return Semester.listAll();
+    public List<SemesterResponseDTO> list() {
+        return semesterService.listSemesters();
     }
 
     @GET
     @Path("{id}")
     public Response get(@PathParam("id") UUID id) {
-        Semester s = Semester.findById(id);
-        return s != null
-                ? Response.ok(s).build()
-                : Response.status(Response.Status.NOT_FOUND).build();
+        SemesterResponseDTO dto = semesterService.getSemester(id);
+        return Response.ok(dto).build();
     }
 
     @POST
-    @Transactional
-    public Response create(Semester semester, @Context UriInfo uriInfo) {
-        semester.persist();
-        URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(semester.getId().toString())
-                .build();
-        return Response.created(uri).build();
+    public Response create(SemesterRequestDTO dto, @Context UriInfo uriInfo) {
+        SemesterResponseDTO created = semesterService.createSemester(dto);
+        URI uri = uriInfo.getAbsolutePathBuilder().path(created.getId().toString()).build();
+        return Response.created(uri).entity(created).build();
     }
 
     @PUT
     @Path("{id}")
-    @Transactional
-    public Response update(@PathParam("id") UUID id, Semester updated) {
-        Semester existing = Semester.findById(id);
-        if (existing == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        existing.setName(updated.getName());
-        existing.setStartDate(updated.getStartDate());
-        existing.setEndDate(updated.getEndDate());
-        return Response.ok(existing).build();
+    public Response update(@PathParam("id") UUID id, SemesterRequestDTO dto) {
+        SemesterResponseDTO updated = semesterService.updateSemester(id, dto);
+        return Response.ok(updated).build();
     }
 
     @DELETE
     @Path("{id}")
-    @Transactional
     public Response delete(@PathParam("id") UUID id) {
-        boolean deleted = Semester.deleteById(id);
-        return deleted
-                ? Response.noContent().build()
-                : Response.status(Response.Status.NOT_FOUND).build();
+        semesterService.deleteSemester(id);
+        return Response.noContent().build();
     }
 }
