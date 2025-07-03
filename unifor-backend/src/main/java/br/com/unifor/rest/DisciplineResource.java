@@ -1,7 +1,6 @@
 package br.com.unifor.rest;
 
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import java.net.URI;
@@ -20,20 +19,19 @@ import jakarta.inject.Inject;
 @RolesAllowed({"COORDENADOR", "ADMIN"})
 public class DisciplineResource {
 
-    // Recurso REST responsável pelo gerenciamento de disciplinas da instituição.
-    // Disponível apenas para usuários com perfil COORDENADOR ou ADMIN, conforme @RolesAllowed.
-    // Implementa operações CRUD básicas para a entidade Discipline.
+    // Recurso REST para gerenciamento de disciplinas.
+    // Controla o cadastro e manutenção das disciplinas oferecidas.
     //
-    // Decisão: O campo 'code' é considerado único e representa o código institucional da disciplina.
-    // O campo 'credits' é obrigatório e representa a carga horária ou créditos da disciplina.
-    // O campo 'description' é opcional e pode detalhar a disciplina.
-    // O método persist() do Panache cuida da geração do UUID da disciplina.
-    // O método deleteById retorna true se a disciplina foi removida, false se não encontrada.
-    // O método update atualiza todos os campos editáveis da disciplina, exceto o id.
-    // O endpoint está protegido por autenticação e autorização via Keycloak.
-    // O padrão REST facilita integração com frontend e outros sistemas.
+    // Decisões técnicas:
+    // - Campo 'code' é único e representa o código da disciplina
+    // - Campos obrigatórios: nome, carga horária e créditos
     //
-    // Para mais detalhes sobre as decisões, consulte o README.
+    // Permissões:
+    // - Todas as operações restritas a COORDENADOR e ADMIN
+    //
+    // Observações:
+    // - IDs são gerados automaticamente como UUID
+    // - Autenticação e autorização via Keycloak
 
     @Inject
     DisciplineService disciplineService;

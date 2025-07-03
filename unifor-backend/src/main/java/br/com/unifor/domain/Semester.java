@@ -13,14 +13,26 @@ import java.util.UUID;
 @Entity
 @Table(name = "semester")
 public class Semester extends PanacheEntityBase {
-    // Representa um semestre letivo (ex: 2024.1).
-    // Utiliza UUID como identificador e termo único para evitar duplicidade.
-    // O termo segue padrão como "2024.1" ou "2024.2".
-    // As datas de início e fim são obrigatórias para controle de períodos acadêmicos.
+
+    // Entidade que representa um semestre letivo.
     //
-    // Decisão: O campo 'term' é limitado a 20 caracteres e único.
+    // Atributos:
+    // - id: identificador único do semestre (UUID)
+    // - name: identificador do semestre (ex: 2023.1)
+    // - startDate: data de início do semestre
+    // - endDate: data de término do semestre
     //
-    // Para mais detalhes sobre as decisões, consulte o README.
+    // Relacionamentos:
+    // - Um semestre pode ter várias matrizes curriculares (Curriculum)
+    //
+    // Regras:
+    // - Nome e datas são obrigatórios
+    // - O nome deve ser único no sistema
+    // - Data de início deve ser anterior à data de fim
+    //
+    // Observações:
+    // - Utiliza Panache para persistência
+    // - Validações de datas são realizadas antes da persistência
 
     @Id
     @GeneratedValue

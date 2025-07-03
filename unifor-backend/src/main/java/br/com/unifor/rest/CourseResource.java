@@ -1,7 +1,6 @@
 package br.com.unifor.rest;
 
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import java.net.URI;
@@ -18,19 +17,19 @@ import jakarta.inject.Inject;
 @RolesAllowed({"COORDENADOR", "ADMIN"})
 public class CourseResource {
 
-    // Recurso REST responsável pelo gerenciamento de cursos da instituição.
-    // Disponível apenas para usuários com perfil COORDENADOR ou ADMIN, conforme @RolesAllowed.
-    // Implementa operações CRUD básicas para a entidade Course.
+    // Recurso REST para gerenciamento de cursos da instituição.
+    // Controla o cadastro e manutenção dos cursos disponíveis.
     //
-    // Decisão: O campo 'code' é considerado único e representa o código institucional do curso.
-    // O campo 'description' é opcional e pode detalhar o curso.
-    // O método persist() do Panache cuida da geração do UUID do curso.
-    // O método deleteById retorna true se o curso foi removido, false se não encontrado.
-    // O método update atualiza todos os campos editáveis do curso, exceto o id.
-    // O endpoint está protegido por autenticação e autorização via Keycloak.
-    // O padrão REST facilita integração com frontend e outros sistemas.
+    // Decisões técnicas:
+    // - Campo 'code' é único e representa o código institucional do curso
+    // - Campo 'description' é opcional para detalhamento
     //
-    // Para mais detalhes sobre as decisões, consulte o README.
+    // Permissões:
+    // - Todas as operações restritas a COORDENADOR e ADMIN
+    //
+    // Observações:
+    // - IDs são gerados automaticamente como UUID
+    // - Autenticação e autorização via Keycloak
 
     @Inject
     CourseService courseService;

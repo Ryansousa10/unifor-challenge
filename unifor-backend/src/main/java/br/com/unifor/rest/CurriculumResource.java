@@ -1,7 +1,6 @@
 package br.com.unifor.rest;
 
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import java.net.URI;
@@ -17,18 +16,16 @@ import jakarta.inject.Inject;
 @Consumes(MediaType.APPLICATION_JSON)
 public class CurriculumResource {
 
-    // Recurso REST responsável pelo gerenciamento de matrizes curriculares (Curriculum).
-    // Permite listar e consultar matrizes para todos os perfis (COORDENADOR, PROFESSOR, ALUNO, ADMIN).
-    // Apenas usuários com perfil COORDENADOR ou ADMIN podem criar, atualizar ou remover matrizes curriculares.
+    // Recurso REST para gerenciamento de matrizes curriculares.
+    // Cada matriz é composta por um curso e um semestre.
     //
-    // Decisão: A matriz curricular é composta por um curso e um semestre, ambos obrigatórios.
-    // O método persist() do Panache cuida da geração do UUID da matriz.
-    // O método deleteById retorna true se a matriz foi removida, false se não encontrada.
-    // O método update atualiza os campos de curso e semestre da matriz, exceto o id.
-    // O endpoint está protegido por autenticação e autorização via Keycloak.
-    // O padrão REST facilita integração com frontend e outros sistemas.
+    // Permissões:
+    // - Listagem e consulta: COORDENADOR, PROFESSOR, ALUNO, ADMIN
+    // - Criação, atualização e remoção: COORDENADOR, ADMIN
     //
-    // Para mais detalhes sobre as decisões, consulte o README.
+    // Observações:
+    // - IDs são gerados automaticamente como UUID
+    // - Autenticação e autorização via Keycloak
 
     @Inject
     CurriculumService curriculumService;

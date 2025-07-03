@@ -12,6 +12,19 @@ import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class CourseService {
+    // Serviço responsável pela lógica de negócio relacionada a cursos.
+    // Implementa as operações CRUD e regras específicas para a entidade Course.
+    //
+    // Regras de negócio:
+    // - Código do curso deve ser único no sistema
+    // - Nome do curso é obrigatório
+    // - Descrição é opcional
+    //
+    // Observações:
+    // - Utiliza Panache para persistência
+    // - Validações de unicidade são realizadas antes da persistência
+    // - Transformação entre DTOs e entidades acontece nesta camada
+
     public List<CourseResponseDTO> listCourses() {
         return Course.listAll().stream()
                 .map(c -> toResponseDTO((Course) c))
@@ -65,4 +78,3 @@ public class CourseService {
         return dto;
     }
 }
-

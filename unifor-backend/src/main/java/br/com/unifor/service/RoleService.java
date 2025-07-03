@@ -12,6 +12,19 @@ import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class RoleService {
+    // Serviço responsável pela lógica de negócio relacionada a perfis de acesso.
+    // Implementa as operações CRUD e regras específicas para a entidade Role.
+    //
+    // Regras de negócio:
+    // - Nome do perfil deve ser único no sistema
+    // - Perfis são utilizados para controle de acesso
+    // - Perfis não podem ser excluídos se estiverem em uso
+    //
+    // Observações:
+    // - Utiliza Panache para persistência
+    // - Integração com Keycloak para controle de acesso
+    // - Transformação entre DTOs e entidades acontece nesta camada
+
     public List<RoleResponseDTO> listRoles() {
         return Role.listAll().stream()
                 .map(r -> toResponseDTO((Role) r))

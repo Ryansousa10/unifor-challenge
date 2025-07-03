@@ -15,12 +15,27 @@ import java.util.UUID;
         uniqueConstraints = @UniqueConstraint(columnNames = {"course_id", "semester_id"})
 )
 public class Curriculum extends PanacheEntityBase {
-    // Representa a matriz curricular de um curso em um semestre específico.
-    // Associa um Course a um Semester, permitindo a montagem da grade de disciplinas por período.
-    // A restrição de unicidade garante que não existam matrizes duplicadas para o mesmo curso e semestre.
-    // Utiliza UUID como identificador e relacionamentos ManyToOne para curso e semestre.
+
+    // Entidade que representa uma matriz curricular.
     //
-    // Para mais detalhes sobre as decisões, consulte o README.
+    // Atributos:
+    // - id: identificador único da matriz (UUID)
+    // - course: curso ao qual a matriz pertence
+    // - semester: semestre letivo da matriz
+    //
+    // Relacionamentos:
+    // - Pertence a um Curso (Course)
+    // - Pertence a um Semestre (Semester)
+    // - Possui várias disciplinas através de CurricDisc
+    //
+    // Regras:
+    // - Deve estar associada a um curso e um semestre
+    // - Não pode haver mais de uma matriz para o mesmo curso/semestre
+    // - Disciplinas são vinculadas através da entidade CurricDisc
+    //
+    // Observações:
+    // - Utiliza Panache para persistência
+    // - Possui constraint de unicidade para curso+semestre
 
     @Id
     @GeneratedValue

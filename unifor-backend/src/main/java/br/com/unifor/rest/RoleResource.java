@@ -20,14 +20,19 @@ public class RoleResource {
     @Inject
     RoleService roleService;
 
-    // Recurso REST responsável pelo gerenciamento de perfis (roles) de acesso do sistema.
-    // Disponível apenas para usuários com perfil ADMIN, conforme @RolesAllowed.
-    // Implementa operações CRUD básicas para a entidade Role.
+    // Recurso REST para gerenciamento de perfis de acesso.
+    // Controla os tipos de perfis disponíveis no sistema.
     //
-    // Decisão: O controle de acesso é feito via Keycloak/Quarkus Security, garantindo que apenas administradores possam manipular perfis.
-    // O padrão REST facilita integração com frontend e outros sistemas.
+    // Decisões técnicas:
+    // - Campo 'name' é único e representa o nome do perfil
+    // - Perfis padrão: ALUNO, PROFESSOR, COORDENADOR, ADMIN
     //
-    // Para mais detalhes sobre as decisões, consulte o README.
+    // Permissões:
+    // - Todas as operações restritas a ADMIN
+    //
+    // Observações:
+    // - IDs são gerados automaticamente como UUID
+    // - Integração com permissões do Keycloak
 
     @GET
     public List<RoleResponseDTO> list() {

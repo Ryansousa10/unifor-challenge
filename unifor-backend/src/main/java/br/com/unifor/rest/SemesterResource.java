@@ -1,7 +1,6 @@
 package br.com.unifor.rest;
 
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import java.net.URI;
@@ -18,19 +17,19 @@ import jakarta.inject.Inject;
 @RolesAllowed({"COORDENADOR", "ADMIN"})
 public class SemesterResource {
 
-    // Recurso REST responsável pelo gerenciamento de semestres acadêmicos da instituição.
-    // Disponível apenas para usuários com perfil COORDENADOR ou ADMIN, conforme @RolesAllowed.
-    // Implementa operações CRUD básicas para a entidade Semester.
+    // Recurso REST para gerenciamento de semestres letivos.
+    // Controla o cadastro e manutenção dos semestres acadêmicos.
     //
-    // Decisão: O campo 'name' é considerado único e representa o identificador do período (ex: 2025.1).
-    // Os campos 'startDate' e 'endDate' são obrigatórios e representam o período de vigência do semestre.
-    // O método persist() do Panache cuida da geração do UUID do semestre.
-    // O método deleteById retorna true se o semestre foi removido, false se não encontrado.
-    // O método update atualiza todos os campos editáveis do semestre, exceto o id.
-    // O endpoint está protegido por autenticação e autorização via Keycloak.
-    // O padrão REST facilita integração com frontend e outros sistemas.
+    // Decisões técnicas:
+    // - Campo 'code' é único e representa o código do semestre (ex: 2023.1)
+    // - Campo 'description' é opcional para informações adicionais
     //
-    // Para mais detalhes sobre as decisões, consulte o README.
+    // Permissões:
+    // - Todas as operações restritas a COORDENADOR e ADMIN
+    //
+    // Observações:
+    // - IDs são gerados automaticamente como UUID
+    // - Autenticação e autorização via Keycloak
 
     @Inject
     SemesterService semesterService;

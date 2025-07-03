@@ -12,14 +12,27 @@ import java.util.UUID;
 @Entity
 @Table(name = "discipline")
 public class Discipline extends PanacheEntityBase {
-    // Representa uma disciplina (matéria) do curso.
-    // Utiliza UUID como identificador e código único para facilitar integrações e buscas.
-    // O campo 'credits' representa a carga horária ou créditos da disciplina.
-    // O campo 'description' permite detalhar o conteúdo da disciplina.
+
+    // Entidade que representa uma disciplina acadêmica.
     //
-    // Decisão: O campo 'code' é limitado a 20 caracteres e único.
+    // Atributos:
+    // - id: identificador único da disciplina (UUID)
+    // - code: código institucional da disciplina (único)
+    // - name: nome completo da disciplina
+    // - credits: número de créditos/carga horária
+    // - description: descrição detalhada da disciplina (opcional)
     //
-    // Para mais detalhes sobre as decisões, consulte o README.
+    // Relacionamentos:
+    // - Uma disciplina pode estar em várias matrizes curriculares (CurricDisc)
+    //
+    // Regras:
+    // - O código, nome e créditos são obrigatórios
+    // - O código deve ser único no sistema
+    // - Os créditos devem ser um número positivo
+    //
+    // Observações:
+    // - Utiliza Panache para persistência
+    // - Validações são realizadas antes da persistência
 
     @Id
     @GeneratedValue

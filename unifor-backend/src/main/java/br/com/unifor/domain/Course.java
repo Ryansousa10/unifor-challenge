@@ -12,15 +12,25 @@ import java.util.UUID;
 @Entity
 @Table(name = "course")
 public class Course extends PanacheEntityBase {
-    // Representa um curso da instituição (ex: Engenharia, Administração).
-    // Utiliza UUID como identificador e possui código único para facilitar integrações e buscas.
-    // As anotações Lombok (@Data, @NoArgsConstructor, etc.) reduzem o boilerplate de getters/setters e construtores.
-    // As anotações JPA mapeiam a entidade para o banco de dados.
-    // O campo 'description' permite detalhar o curso e utiliza o tipo TEXT para maior flexibilidade.
+
+    // Entidade que representa um curso da instituição.
     //
-    // Decisão: O campo 'code' é limitado a 20 caracteres e único para evitar duplicidade de cursos.
+    // Atributos:
+    // - id: identificador único do curso (UUID)
+    // - code: código institucional do curso (único)
+    // - name: nome completo do curso
+    // - description: descrição detalhada do curso (opcional)
     //
-    // Para mais detalhes sobre as decisões, consulte o README.
+    // Relacionamentos:
+    // - Um curso pode ter várias matrizes curriculares (Curriculum)
+    //
+    // Regras:
+    // - O código e nome são obrigatórios
+    // - O código deve ser único no sistema
+    //
+    // Observações:
+    // - Utiliza Panache para persistência
+    // - Validações de unicidade são realizadas antes da persistência
 
     @Id
     @GeneratedValue
