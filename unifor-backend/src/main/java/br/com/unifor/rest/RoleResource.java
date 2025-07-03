@@ -1,13 +1,13 @@
 package br.com.unifor.rest;
 
-import br.com.unifor.domain.Role;
+import br.com.unifor.dto.RoleRequestDTO;
+import br.com.unifor.dto.RoleResponseDTO;
+import br.com.unifor.service.RoleService;
+import jakarta.inject.Inject;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriInfo;
-import jakarta.ws.rs.core.Context;
-import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,6 +16,9 @@ import java.util.UUID;
 @Consumes(MediaType.APPLICATION_JSON)
 @RolesAllowed("ADMIN")
 public class RoleResource {
+
+    @Inject
+    RoleService roleService;
 
     // Recurso REST responsável pelo gerenciamento de perfis (roles) de acesso do sistema.
     // Disponível apenas para usuários com perfil ADMIN, conforme @RolesAllowed.
@@ -27,45 +30,34 @@ public class RoleResource {
     // Para mais detalhes sobre as decisões, consulte o README.
 
     @GET
-    public List<Role> list() {
-        return Role.listAll();
+    public List<RoleResponseDTO> list() {
+        return roleService.listRoles();
     }
 
     @GET
     @Path("{id}")
     public Response get(@PathParam("id") UUID id) {
-        Role role = Role.findById(id);
-        return role != null
-                ? Response.ok(role).build()
-                : Response.status(Response.Status.NOT_FOUND).build();
+        RoleResponseDTO dto = roleService.getRole(id);
+        return Response.ok(dto).build();
     }
 
     @POST
-    public Response create(Role role, @Context UriInfo uriInfo) {
-        role.persist();
-        URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(role.getId().toString())
-                .build();
-        return Response.created(uri).build();
+    public Response create(RoleRequestDTO dto) {
+        RoleResponseDTO created = roleService.createRole(dto);
+        return Response.status(Response.Status.CREATED).entity(created).build();
     }
 
     @PUT
     @Path("{id}")
-    public Response update(@PathParam("id") UUID id, Role updated) {
-        Role existing = Role.findById(id);
-        if (existing == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        existing.setName(updated.getName());
-        return Response.ok(existing).build();
+    public Response update(@PathParam("id") UUID id, RoleRequestDTO dto) {
+        RoleResponseDTO updated = roleService.updateRole(id, dto);
+        return Response.ok(updated).build();
     }
 
     @DELETE
     @Path("{id}")
     public Response delete(@PathParam("id") UUID id) {
-        boolean deleted = Role.deleteById(id);
-        return deleted
-                ? Response.noContent().build()
-                : Response.status(Response.Status.NOT_FOUND).build();
+        roleService.deleteRole(id);
+        return Response.noContent().build();
     }
 }
