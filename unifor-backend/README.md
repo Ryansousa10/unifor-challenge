@@ -1,58 +1,145 @@
-# unifor-backend
+# Sistema de Gestão Acadêmica - UNIFOR Backend
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+Este é o backend do sistema de gestão acadêmica da UNIFOR, desenvolvido com Quarkus, PostgreSQL e autenticação via Keycloak.
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+## 🚀 Tecnologias
 
-## Running the application in dev mode
+- Java 17
+- Quarkus 3.24.1
+- PostgreSQL
+- Keycloak
+- Docker
+- Flyway (Migrations)
+- JUnit 5 (Testes)
 
-You can run your application in dev mode that enables live coding using:
+## 📋 Requisitos
 
-```shell script
-./mvnw quarkus:dev
+- Java 17 ou superior
+- Maven
+- Docker e Docker Compose
+- PostgreSQL (opcional se usar Docker)
+
+## 🔧 Configuração do Ambiente
+
+### Para Usuários (Testando a Aplicação)
+
+1. Clone o repositório:
+```bash
+git clone https://github.com/Ryansousa10/unifor-challenge-backend.git
+cd unifor-challenge-backend
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+2. Inicie a aplicação e todos os serviços necessários com Docker Compose:
+```bash
+docker-compose up -d
+```
 
-## Packaging and running the application
+A aplicação estará disponível para requisições em http://localhost:8080
 
-The application can be packaged using:
+## 🗄️ Estrutura do Banco de Dados
 
-```shell script
+O sistema utiliza migrations (Flyway) para gerenciar a estrutura do banco de dados:
+
+- V1: Usuários e Papéis (users, role, user_role)
+- V2: Entidades Acadêmicas (course, semester, discipline)
+- V3: Estrutura Curricular (curriculum, curric_disc)
+- V4: Matrículas (enrollment)
+
+## 🔐 Autenticação
+
+O sistema utiliza Keycloak para autenticação e autorização, com os seguintes papéis:
+
+- ADMIN
+- COORDENADOR
+- PROFESSOR
+- ALUNO
+
+## 🌐 API Endpoints
+
+### Usuários
+- GET /api/users - Lista todos os usuários
+- POST /api/users - Cria novo usuário
+- GET /api/users/{id} - Obtém usuário específico
+- PUT /api/users/{id} - Atualiza usuário
+- DELETE /api/users/{id} - Remove usuário
+
+### Cursos
+- GET /api/courses - Lista todos os cursos
+- POST /api/courses - Cria novo curso
+- GET /api/courses/{id} - Obtém curso específico
+- PUT /api/courses/{id} - Atualiza curso
+- DELETE /api/courses/{id} - Remove curso
+
+### Disciplinas
+- GET /api/disciplines - Lista todas as disciplinas
+- POST /api/disciplines - Cria nova disciplina
+- GET /api/disciplines/{id} - Obtém disciplina específica
+- PUT /api/disciplines/{id} - Atualiza disciplina
+- DELETE /api/disciplines/{id} - Remove disciplina
+
+### Semestres
+- GET /api/semesters - Lista todos os semestres
+- POST /api/semesters - Cria novo semestre
+- GET /api/semesters/{id} - Obtém semestre específico
+- PUT /api/semesters/{id} - Atualiza semestre
+- DELETE /api/semesters/{id} - Remove semestre
+
+### Currículos
+- GET /api/curricula - Lista todos os currículos
+- POST /api/curricula - Cria novo currículo
+- GET /api/curricula/{id} - Obtém currículo específico
+- PUT /api/curricula/{id} - Atualiza currículo
+- DELETE /api/curricula/{id} - Remove currículo
+
+### Matrículas
+- GET /api/enrollments - Lista todas as matrículas
+- POST /api/enrollments - Cria nova matrícula
+- GET /api/enrollments/{id} - Obtém matrícula específica
+- PUT /api/enrollments/{id} - Atualiza matrícula
+- DELETE /api/enrollments/{id} - Remove matrícula
+
+## 🧪 Testes
+
+O projeto possui testes automatizados cobrindo:
+
+1. **Migrations**: Validação da estrutura do banco de dados
+   - Colunas e tipos
+   - Constraints (PK, FK, UNIQUE)
+   - Relacionamentos
+
+2. **Services**: Lógica de negócio
+   - Validações
+   - Regras de negócio
+   - Manipulação de dados
+
+3. **Controllers**: Endpoints da API
+   - Validação de requisições
+   - Códigos de status HTTP
+   - Respostas formatadas
+
+Para executar os testes:
+```bash
+./mvnw test
+```
+
+## 📦 Build e Deploy
+
+Para gerar o JAR da aplicação:
+```bash
 ./mvnw package
 ```
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
-
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
-
-If you want to build an _über-jar_, execute the following command:
-
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
+Para gerar a imagem Docker:
+```bash
+docker build -f src/main/docker/Dockerfile.jvm -t unifor-backend:latest .
 ```
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+## 🔍 Monitoramento
 
-## Creating a native executable
+A aplicação expõe métricas através do endpoint: `/q/metrics`
 
-You can create a native executable using:
+Health checks disponíveis em: `/q/health`
 
-```shell script
-./mvnw package -Dnative
-```
+## 📄 Licença
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
-
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
-```
-
-You can then execute your native executable with: `./target/unifor-backend-1.0.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
-
-## Related Guides
-
-- Camel Platform HTTP ([guide](https://camel.apache.org/camel-quarkus/latest/reference/extensions/platform-http.html)): Expose HTTP endpoints using the HTTP server available in the current platform
+Este projeto está sob a licença MIT.
