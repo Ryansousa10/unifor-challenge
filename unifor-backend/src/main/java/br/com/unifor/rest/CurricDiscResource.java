@@ -17,18 +17,20 @@ import java.util.UUID;
 @RolesAllowed({"COORDENADOR", "ADMIN"})
 public class CurricDiscResource {
 
-    // Recurso REST responsável pelo gerenciamento da associação entre matriz curricular e disciplinas (CurricDisc).
-    // Disponível apenas para usuários com perfil COORDENADOR ou ADMIN, conforme @RolesAllowed.
-    // Permite listar, adicionar, atualizar e remover disciplinas de uma matriz curricular específica.
+    // Recurso REST para gerenciamento de disciplinas em matrizes curriculares.
+    // Controla as disciplinas que compõem cada matriz curricular.
     //
-    // Decisão: A associação é identificada por chave composta (curriculumId + disciplineId).
-    // O método create vincula uma disciplina a uma matriz curricular, exigindo o curriculumId na URL.
-    // O método update permite alterar a ordem (ordering) da disciplina na matriz.
-    // O método delete remove a associação entre a matriz curricular e a disciplina.
-    // O endpoint está protegido por autenticação e autorização via Keycloak.
-    // O padrão REST facilita integração com frontend e outros sistemas.
+    // Decisões técnicas:
+    // - Endpoint aninhado sob /curriculum/{curriculumId}/disciplines
+    // - Relacionamento N:N entre matriz curricular e disciplinas
+    // - Campos adicionais: período sugerido, pré-requisitos
     //
-    // Para mais detalhes sobre as decisões, consulte o README.
+    // Permissões:
+    // - Todas as operações restritas a COORDENADOR e ADMIN
+    //
+    // Observações:
+    // - IDs são gerados automaticamente como UUID
+    // - Autenticação e autorização via Keycloak
 
     @Inject
     CurricDiscService curricDiscService;

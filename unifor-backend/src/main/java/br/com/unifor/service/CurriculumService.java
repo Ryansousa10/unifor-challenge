@@ -14,6 +14,19 @@ import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class CurriculumService {
+    // Serviço responsável pela lógica de negócio relacionada a matrizes curriculares.
+    // Implementa as operações CRUD e regras específicas para a entidade Curriculum.
+    //
+    // Regras de negócio:
+    // - Uma matriz curricular deve estar vinculada a um curso
+    // - Uma matriz curricular deve estar vinculada a um semestre
+    // - Não pode existir mais de uma matriz ativa para o mesmo curso/semestre
+    //
+    // Observações:
+    // - Utiliza Panache para persistência
+    // - Validações de relacionamentos são realizadas antes da persistência
+    // - Transformação entre DTOs e entidades acontece nesta camada
+
     public List<CurriculumResponseDTO> listCurriculums() {
         return Curriculum.listAll().stream()
                 .map(c -> toResponseDTO((Curriculum) c))
@@ -80,4 +93,3 @@ public class CurriculumService {
         return dto;
     }
 }
-

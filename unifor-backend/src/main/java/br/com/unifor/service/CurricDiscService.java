@@ -12,6 +12,19 @@ import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class CurricDiscService {
+    // Serviço responsável pela lógica de negócio relacionada ao vínculo entre matrizes curriculares e disciplinas.
+    // Implementa as operações CRUD e regras específicas para a entidade CurricDisc.
+    //
+    // Regras de negócio:
+    // - Uma disciplina só pode aparecer uma vez em cada matriz curricular
+    // - A ordem das disciplinas deve ser respeitada
+    // - Pré-requisitos devem ser validados
+    //
+    // Observações:
+    // - Utiliza Panache para persistência
+    // - Validações de relacionamentos são realizadas antes da persistência
+    // - Transformação entre DTOs e entidades acontece nesta camada
+
     public List<CurricDiscResponseDTO> listCurricDiscs() {
         return CurricDisc.listAll().stream()
                 .map(c -> toResponseDTO((CurricDisc) c))
@@ -63,4 +76,3 @@ public class CurricDiscService {
         return dto;
     }
 }
-

@@ -16,6 +16,19 @@ import java.util.stream.Collectors;
 @ApplicationScoped
 public class UserService {
 
+    // Serviço responsável pela lógica de negócio relacionada a usuários.
+    // Implementa as operações CRUD e regras específicas para a entidade User.
+    //
+    // Regras de negócio:
+    // - Email deve ser único no sistema
+    // - Usuário deve ter pelo menos um perfil (Role)
+    // - Senha é gerenciada pelo Keycloak
+    //
+    // Observações:
+    // - Utiliza Panache para persistência
+    // - Integração com Keycloak para autenticação
+    // - Transformação entre DTOs e entidades acontece nesta camada
+
     public List<UserResponseDTO> listUsers() {
         return User.listAll().stream()
                 .map(u -> toResponseDTO((User) u))

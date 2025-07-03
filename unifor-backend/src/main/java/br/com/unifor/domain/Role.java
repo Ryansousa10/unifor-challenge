@@ -19,12 +19,23 @@ import java.util.UUID;
 @Entity
 public class Role extends PanacheEntityBase {
 
-    // Representa o perfil de acesso do usuário no sistema (ex: ADMIN, COORDENADOR, PROFESSOR, ALUNO).
-    // Permite associação ManyToMany com usuários, possibilitando múltiplos perfis por usuário.
+    // Entidade que representa um perfil de acesso ao sistema.
     //
-    // Decisão: O campo 'name' é limitado a 20 caracteres e único para evitar duplicidade de perfis.
+    // Atributos:
+    // - id: identificador único do perfil (UUID)
+    // - name: nome do perfil (ex: ADMIN, COORDENADOR)
     //
-    // Para mais detalhes sobre as decisões, consulte o README.
+    // Relacionamentos:
+    // - Um perfil pode estar associado a vários usuários (User)
+    //
+    // Regras:
+    // - Nome do perfil deve ser único
+    // - Nome do perfil é convertido para maiúsculas
+    // - Perfis padrão: ADMIN, COORDENADOR, PROFESSOR, ALUNO
+    //
+    // Observações:
+    // - Utiliza Panache para persistência
+    // - Integração com permissões do Keycloak
 
     @Id
     @GeneratedValue

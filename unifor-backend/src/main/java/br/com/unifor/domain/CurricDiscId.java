@@ -9,12 +9,23 @@ import java.util.UUID;
 @AllArgsConstructor
 public class CurricDiscId implements Serializable {
 
-    // Classe auxiliar para compor a chave primária da entidade CurricDisc (relação N:N entre matriz curricular e disciplina).
-    // Necessária para o uso de chave composta com JPA (@IdClass).
-    // Implementa Serializable para garantir compatibilidade com o JPA.
-    // Os campos curriculumId e disciplineId representam as chaves das entidades associadas.
+    // Classe que representa a chave composta da entidade CurricDisc.
     //
-    // Para mais detalhes sobre as decisões, consulte o README.
+    // Atributos:
+    // - curriculumId: identificador da matriz curricular
+    // - disciplineId: identificador da disciplina
+    //
+    // Finalidade:
+    // - Compor a chave primária da relação N:N entre matriz curricular e disciplina
+    // - Garantir unicidade na associação entre matriz e disciplina
+    //
+    // Regras:
+    // - Ambos os IDs são obrigatórios
+    // - A combinação dos IDs deve ser única
+    //
+    // Observações:
+    // - Implementa Serializable conforme requisito JPA
+    // - Utilizada com @IdClass em CurricDisc
 
     private UUID curriculumId;
     private UUID disciplineId;

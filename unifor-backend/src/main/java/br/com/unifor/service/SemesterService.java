@@ -12,6 +12,19 @@ import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class SemesterService {
+    // Serviço responsável pela lógica de negócio relacionada a semestres letivos.
+    // Implementa as operações CRUD e regras específicas para a entidade Semester.
+    //
+    // Regras de negócio:
+    // - Nome do semestre deve ser único (ex: 2023.1)
+    // - Data de início e fim são obrigatórias
+    // - Data de início deve ser anterior à data de fim
+    //
+    // Observações:
+    // - Utiliza Panache para persistência
+    // - Validações de datas são realizadas antes da persistência
+    // - Transformação entre DTOs e entidades acontece nesta camada
+
     public List<SemesterResponseDTO> listSemesters() {
         return Semester.listAll().stream()
                 .map(s -> toResponseDTO((Semester) s))

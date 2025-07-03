@@ -12,6 +12,19 @@ import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class DisciplineService {
+    // Serviço responsável pela lógica de negócio relacionada a disciplinas.
+    // Implementa as operações CRUD e regras específicas para a entidade Discipline.
+    //
+    // Regras de negócio:
+    // - Código da disciplina deve ser único no sistema
+    // - Nome e carga horária são obrigatórios
+    // - Uma disciplina pode ter pré-requisitos
+    //
+    // Observações:
+    // - Utiliza Panache para persistência
+    // - Validações de unicidade são realizadas antes da persistência
+    // - Transformação entre DTOs e entidades acontece nesta camada
+
     public List<DisciplineResponseDTO> listDisciplines() {
         return Discipline.listAll().stream()
                 .map(d -> toResponseDTO((Discipline) d))
@@ -68,4 +81,3 @@ public class DisciplineService {
         return dto;
     }
 }
-

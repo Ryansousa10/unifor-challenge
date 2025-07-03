@@ -19,14 +19,22 @@ import java.util.UUID;
 @Authenticated
 public class UserResource {
 
-    // Recurso REST responsável pelo gerenciamento de usuários do sistema.
-    // Disponível apenas para usuários com perfil ADMIN, conforme @RolesAllowed.
-    // Implementa operações CRUD básicas para a entidade User.
+    // Recurso REST para gerenciamento de usuários do sistema.
+    // Controla o cadastro e manutenção de usuários (alunos, professores, coordenadores e admin).
     //
-    // Decisão: O controle de acesso é feito via Keycloak/Quarkus Security, garantindo que apenas administradores possam manipular usuários.
-    // O padrão REST facilita integração com frontend e outros sistemas.
+    // Decisões técnicas:
+    // - Campo 'email' é único e usado como identificador do usuário
+    // - Campo 'role' define o perfil do usuário (ALUNO, PROFESSOR, COORDENADOR, ADMIN)
+    // - Integração com Keycloak para autenticação
     //
-    // Para mais detalhes sobre as decisões, consulte o README.
+    // Permissões:
+    // - Listagem: COORDENADOR, ADMIN
+    // - Consulta: usuário autenticado pode ver seus próprios dados
+    // - Criação/Atualização/Remoção: ADMIN
+    //
+    // Observações:
+    // - IDs são gerados automaticamente como UUID
+    // - Senhas são gerenciadas pelo Keycloak
 
     @Inject
     UserService userService;
