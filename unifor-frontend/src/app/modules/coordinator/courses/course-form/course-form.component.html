@@ -1,0 +1,63 @@
+<div class="course-form-container">
+  <div class="course-form-header">
+    <h2>{{ isEditMode ? 'Editar' : 'Novo' }} Curso</h2>
+    <button class="btn-secondary" (click)="navigateBack()">Voltar</button>
+  </div>
+
+  <div class="alert alert-error" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <div class="alert alert-success" *ngIf="success">
+    {{ success }}
+  </div>
+
+  <div class="loading-indicator" *ngIf="loading">
+    Carregando...
+  </div>
+
+  <form [formGroup]="courseForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+    <div class="form-group">
+      <label for="name">Nome do Curso *</label>
+      <input
+        type="text"
+        id="name"
+        formControlName="name"
+        class="form-control"
+        [class.is-invalid]="nameControl?.invalid && nameControl?.touched"
+      >
+      <div class="error-message" *ngIf="nameControl?.invalid && nameControl?.touched">
+        <span *ngIf="nameControl?.errors?.['required']">Nome do curso é obrigatório.</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="code">Código do Curso *</label>
+      <input
+        type="text"
+        id="code"
+        formControlName="code"
+        class="form-control"
+        [class.is-invalid]="codeControl?.invalid && codeControl?.touched"
+      >
+      <div class="error-message" *ngIf="codeControl?.invalid && codeControl?.touched">
+        <span *ngIf="codeControl?.errors?.['required']">Código do curso é obrigatório.</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Descrição</label>
+      <textarea
+        id="description"
+        formControlName="description"
+        class="form-control"
+        rows="4"
+      ></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="navigateBack()">Cancelar</button>
+      <button type="submit" class="btn-primary" [disabled]="courseForm.invalid">Salvar</button>
+    </div>
+  </form>
+</div>
