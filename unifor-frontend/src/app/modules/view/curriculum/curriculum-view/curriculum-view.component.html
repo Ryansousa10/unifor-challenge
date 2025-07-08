@@ -1,0 +1,54 @@
+<div class="curriculum-view-container">
+  <div class="curriculum-view-header">
+    <h2>Matriz Curricular</h2>
+    <button class="btn-secondary" (click)="navigateBack()">Voltar</button>
+  </div>
+
+  <div class="alert alert-error" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <div class="loading-indicator" *ngIf="loading">
+    Carregando detalhes da matriz curricular...
+  </div>
+
+  <div class="curriculum-details" *ngIf="!loading && curriculumWithDisciplines">
+    <div class="curriculum-info">
+      <h3>{{ curriculumWithDisciplines.curriculum.courseName }}</h3>
+      <div class="curriculum-metadata">
+        <p><strong>Data de início:</strong> {{ curriculumWithDisciplines.curriculum.startDate | date:'dd/MM/yyyy' }}</p>
+        <p *ngIf="curriculumWithDisciplines.curriculum.endDate">
+          <strong>Data de término:</strong> {{ curriculumWithDisciplines.curriculum.endDate | date:'dd/MM/yyyy' }}
+        </p>
+        <p><strong>Status:</strong>
+          <span [ngClass]="{'status-active': curriculumWithDisciplines.curriculum.active, 'status-inactive': !curriculumWithDisciplines.curriculum.active}">
+            {{ curriculumWithDisciplines.curriculum.active ? 'Ativo' : 'Inativo' }}
+          </span>
+        </p>
+      </div>
+    </div>
+
+    <div class="semesters-container">
+      <div class="semester-block" *ngFor="let semester of semesters">
+        <h4 class="semester-title">{{ semester }}º Semestre</h4>
+
+        <div class="discipline-cards">
+          <div class="discipline-card" *ngFor="let discipline of getDisciplinesBySemester(semester)">
+            <div class="discipline-header">
+              <h5>{{ discipline.disciplineName }}</h5>
+              <span class="discipline-code">{{ discipline.disciplineCode }}</span>
+            </div>
+            <div class="discipline-content">
+              <p><strong>Carga Horária:</strong> {{ discipline.workload }} horas</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && !curriculumWithDisciplines">
+    <p>Nenhuma informação disponível para esta matriz curricular.</p>
+    <button class="btn-secondary" (click)="navigateBack()">Voltar</button>
+  </div>
+</div>
