@@ -1,0 +1,61 @@
+<div class="container">
+  <header class="header">
+    <h1>{{ title }}</h1>
+    <div class="user-info" *ngIf="userProfile">
+      <span>Olá, {{ username }}!</span>
+      <div class="user-roles">
+        <span *ngFor="let role of userRoles" class="role-badge">{{ role }}</span>
+      </div>
+      <button (click)="logout()" class="logout-btn">Sair</button>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="dashboard" *ngIf="userProfile">
+      <h2>Dashboard</h2>
+
+      <!-- Menu baseado nas roles do usuário -->
+      <div class="menu-grid">
+        <div class="menu-item" *ngIf="isAdmin">
+          <h3>🔧 Administração</h3>
+          <p>Gerenciar usuários, cursos e configurações do sistema</p>
+          <small>Acesso completo ao sistema</small>
+        </div>
+
+        <div class="menu-item" *ngIf="isCoordenador">
+          <h3>📋 Coordenação</h3>
+          <p>Gerenciar cursos, disciplinas e currículos</p>
+          <small>Coordenação acadêmica</small>
+        </div>
+
+        <div class="menu-item" *ngIf="isProfessor">
+          <h3>🎓 Professor</h3>
+          <p>Gerenciar disciplinas e acompanhar alunos</p>
+          <small>Área do professor</small>
+        </div>
+
+        <div class="menu-item" *ngIf="isAluno">
+          <h3>📚 Aluno</h3>
+          <p>Visualizar cursos e disciplinas matriculadas</p>
+          <small>Portal do aluno</small>
+        </div>
+      </div>
+
+      <!-- Informações do usuário -->
+      <div class="user-details-card">
+        <h3>Suas Informações</h3>
+        <div class="user-details">
+          <p><strong>Nome:</strong> {{ userInfo?.name || 'Não informado' }}</p>
+          <p><strong>Email:</strong> {{ userInfo?.email || 'Não informado' }}</p>
+          <p><strong>Username:</strong> {{ userInfo?.username || 'Não informado' }}</p>
+          <p><strong>Roles:</strong> {{ userRoles.join(', ') || 'Nenhuma role' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="loading" *ngIf="!userProfile">
+      <div class="spinner"></div>
+      <p>Carregando informações do usuário...</p>
+    </div>
+  </main>
+</div>

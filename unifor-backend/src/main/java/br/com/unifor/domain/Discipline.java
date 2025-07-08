@@ -19,27 +19,6 @@ public class Discipline extends PanacheEntityBase {
     // - id: identificador único da disciplina (UUID)
     // - code: código institucional da disciplina (único)
     // - name: nome completo da disciplina
-    // - credits: número de créditos/carga horária
-    // - description: descrição detalhada da disciplina (opcional)
-    //
-    // Relacionamentos:
-    // - Uma disciplina pode estar em várias matrizes curriculares (CurricDisc)
-    //
-    // Regras:
-    // - O código, nome e créditos são obrigatórios
-    // - O código deve ser único no sistema
-    // - Os créditos devem ser um número positivo
-    //
-    // Observações:
-    // - Utiliza Panache para persistência
-    // - Validações são realizadas antes da persistência
-
-    // Entidade que representa uma disciplina acadêmica.
-    //
-    // Atributos:
-    // - id: identificador único da disciplina (UUID)
-    // - code: código institucional da disciplina (único)
-    // - name: nome completo da disciplina
     // - credits: número de créditos
     // - workload: carga horária da disciplina em horas
     // - description: descrição detalhada da disciplina (opcional)

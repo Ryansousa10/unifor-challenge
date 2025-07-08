@@ -13,6 +13,25 @@ import java.util.UUID;
 @Table(name = "course")
 public class Course extends PanacheEntityBase {
 
+    // Entidade que representa um curso da instituição.
+    //
+    // Atributos:
+    // - id: identificador único do curso (UUID)
+    // - code: código institucional do curso (único)
+    // - name: nome completo do curso
+    // - description: descrição detalhada do curso (opcional)
+    //
+    // Relacionamentos:
+    // - Um curso pode ter várias matrizes curriculares (Curriculum)
+    //
+    // Regras:
+    // - O código e nome são obrigatórios
+    // - O código deve ser único no sistema
+    //
+    // Observações:
+    // - Utiliza Panache para persistência
+    // - Validações de unicidade são realizadas antes da persistência
+
     @Id
     @GeneratedValue
     private UUID id;

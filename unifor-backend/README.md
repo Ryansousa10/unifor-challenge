@@ -1,58 +1,189 @@
-# unifor-backend
+# Sistema de Gestão Acadêmica - UNIFOR Backend
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+Este projeto faz parte do desafio de desenvolvimento para a UNIFOR. O objetivo é criar uma aplicação web responsiva para administração de alunos, professores e cursos, com backend em Java (Quarkus) e frontend em Angular 15+ (standalone), seguindo as instruções do desafio.
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+## 🎯 Escopo do Desafio
 
-## Running the application in dev mode
+- **Visão de Administrador:** Incluir, excluir, atualizar e visualizar usuários.
+- **Visão de Coordenador:** Incluir, excluir, atualizar e visualizar semestres, cursos e disciplinas; montar a matriz curricular.
+- **Visão de Professor e Aluno:** Visualizar a matriz curricular.
+- **Segurança:** Políticas de acesso gerenciadas pelo Keycloak.
+- **Separação:** Backend (Java/Quarkus) e frontend (Angular) desenvolvidos separadamente.
+- **Banco de Dados:** Relacional (PostgreSQL).
+- **Orquestração:** Docker e docker-compose.
 
-You can run your application in dev mode that enables live coding using:
+## 📄 Suposições e Decisões Técnicas
 
-```shell script
-./mvnw quarkus:dev
+- O backend expõe uma API REST documentada via OpenAPI (Swagger).
+- O frontend (Angular) consome a API REST e implementa as visões conforme o perfil do usuário.
+- O controle de acesso é feito via Keycloak, com papéis: ADMIN, COORDENADOR, PROFESSOR, ALUNO.
+- O banco de dados utilizado é PostgreSQL, mas pode ser facilmente adaptado para outros bancos relacionais.
+- O projeto utiliza Flyway para versionamento do banco.
+- Testes unitários são implementados com JUnit 5.
+- O histórico de commits é mantido limpo e descritivo.
+- O backend está preparado para ser executado em ambiente Docker.
+- Todas as decisões técnicas, bibliotecas e patterns utilizados estão documentados neste README e nos comentários do código.
+
+## 🚀 Tecnologias
+
+- Java 17
+- Quarkus 3.24.1
+- PostgreSQL
+- Keycloak
+- Docker
+- Flyway (Migrations)
+- JUnit 5 (Testes)
+
+## 📋 Requisitos
+
+- Java 17 ou superior
+- Maven
+- Docker e Docker Compose
+- PostgreSQL (opcional se usar Docker)
+
+## 🔧 Configuração do Ambiente
+
+1. Clone o repositório:
+```bash
+git clone https://github.com/Ryansousa10/unifor-challenge-backend.git
+cd unifor-challenge-backend
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
-
-## Packaging and running the application
-
-The application can be packaged using:
-
-```shell script
-./mvnw package
+2. Inicie a aplicação e todos os serviços necessários com Docker Compose:
+```bash
+docker-compose up -d
 ```
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+A aplicação estará disponível para requisições em http://localhost:8080
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+## 🗄️ Estrutura do Banco de Dados
 
-If you want to build an _über-jar_, execute the following command:
+O sistema utiliza migrations (Flyway) para gerenciar a estrutura do banco de dados:
 
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
+- V1: Usuários e Papéis (users, role, user_role)
+- V2: Entidades Acadêmicas (course, semester, discipline)
+- V3: Estrutura Curricular (curriculum, curric_disc)
+- V4: Matrículas (enrollment)
+
+## 🔐 Autenticação e Papéis
+
+O sistema utiliza Keycloak para autenticação e autorização, com os seguintes papéis:
+
+- ADMIN
+- COORDENADOR
+- PROFESSOR
+- ALUNO
+
+### Permissões por Papel
+
+| Recurso      | ADMIN | COORDENADOR | PROFESSOR | ALUNO |
+|--------------|:-----:|:-----------:|:---------:|:-----:|
+| Usuários     | CRUD  |     R       |     R     |   R   |
+| Cursos       | CRUD  |    CRUD     |     R     |   R   |
+| Disciplinas  | CRUD  |    CRUD     |     R     |   R   |
+| Currículos   | CRUD  |    CRUD     |     R     |   R   |
+| Semestres    | CRUD  |    CRUD     |     R     |   R   |
+
+CRUD = Criar, Listar, Atualizar, Remover; R = Listar/Visualizar
+
+## 🌐 Endpoints da API (REST)
+
+Os endpoints seguem o padrão REST e estão documentados no arquivo `src/main/resources/openapi.yaml`.
+
+### Usuários
+- GET    /users           - Lista todos os usuários
+- POST   /users           - Cria novo usuário
+- GET    /users/{id}      - Obtém usuário específico
+- PUT    /users/{id}      - Atualiza usuário
+- DELETE /users/{id}      - Remove usuário
+
+### Cursos
+- GET    /course           - Lista todos os cursos
+- POST   /course           - Cria novo curso
+- GET    /course/{id}      - Obtém curso específico
+- PUT    /course/{id}      - Atualiza curso
+- DELETE /course/{id}      - Remove curso
+
+### Disciplinas
+- GET    /discipline           - Lista todas as disciplinas
+- POST   /discipline           - Cria nova disciplina
+- GET    /discipline/{id}      - Obtém disciplina específica
+- PUT    /discipline/{id}      - Atualiza disciplina
+- DELETE /discipline/{id}      - Remove disciplina
+
+### Currículos
+- GET    /curriculum           - Lista todos os currículos
+- POST   /curriculum           - Cria novo currículo
+- GET    /curriculum/{id}      - Obtém currículo específico
+- PUT    /curriculum/{id}      - Atualiza currículo
+- DELETE /curriculum/{id}      - Remove currículo
+
+### Semestres
+- GET    /semester           - Lista todos os semestres
+- POST   /semester           - Cria novo semestre
+- GET    /semester/{id}      - Obtém semestre específico
+- PUT    /semester/{id}      - Atualiza semestre
+- DELETE /semester/{id}      - Remove semestre
+
+## 📄 Exemplos de Uso
+
+### Criar Usuário
+```json
+POST /users
+{
+  "username": "maria.silva",
+  "password": "senhaSegura123",
+  "firstName": "Maria",
+  "lastName": "Silva",
+  "email": "maria.silva@unifor.br",
+  "roles": ["550e8400-e29b-41d4-a716-446655440000"]
+}
 ```
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
-
-## Creating a native executable
-
-You can create a native executable using:
-
-```shell script
-./mvnw package -Dnative
+### Criar Curso
+```json
+POST /course
+{
+  "name": "Engenharia de Computação",
+  "code": "ENGC",
+  "description": "Curso de Engenharia de Computação"
+}
 ```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
-
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
+### Criar Disciplina
+```json
+POST /discipline
+{
+  "name": "Algoritmos",
+  "code": "CS102",
+  "credits": 4,
+  "semester": "550e8400-e29b-41d4-a716-446655440000"
+}
 ```
 
-You can then execute your native executable with: `./target/unifor-backend-1.0.0-SNAPSHOT-runner`
+### Criar Currículo
+```json
+POST /curriculum
+{
+  "courseId": "123e4567-e89b-12d3-a456-426614174000",
+  "semesterId": "123e4567-e89b-12d3-a456-426614174001"
+}
+```
 
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
+### Criar Semestre
+```json
+POST /semester
+{
+  "name": "2024.1",
+  "startDate": "2024-01-15",
+  "endDate": "2024-06-30"
+}
+```
 
-## Related Guides
+## 📚 Documentação OpenAPI
 
-- Camel Platform HTTP ([guide](https://camel.apache.org/camel-quarkus/latest/reference/extensions/platform-http.html)): Expose HTTP endpoints using the HTTP server available in the current platform
+A documentação completa da API está disponível no arquivo `src/main/resources/openapi.yaml` e pode ser visualizada em ferramentas como Swagger Editor ou Insomnia.
+
+---
+
+Caso encontre divergências entre o README, o código e a documentação OpenAPI, priorize sempre o arquivo openapi.yaml e os endpoints REST descritos acima.

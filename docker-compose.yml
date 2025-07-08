@@ -1,25 +1,56 @@
-version: '3.8'
 services:
-  keycloak:
-    image: quay.io/keycloak/keycloak:21.1
-    environment:
-      KC_DB: postgres
-      KC_DB_URL_HOST: keycloak-db
-      KC_DB_URL_DATABASE: keycloak
-      KC_DB_USERNAME: kc_user
-      KC_DB_PASSWORD: kc_pass
-      KC_ADMIN: admin
-      KC_ADMIN_PASSWORD: admin
-    command: start-dev
-    ports:
-      - "8080:8080"
-
   keycloak-db:
     image: postgres:15
     environment:
       POSTGRES_DB: keycloak
       POSTGRES_USER: kc_user
       POSTGRES_PASSWORD: kc_pass
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kc_user -d keycloak"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - keycloak-db-data:/var/lib/postgresql/data
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:21.1
+    command: ["start-dev", "--import-realm"]
+    environment:
+      KC_DB: postgres
+      KC_DB_URL_HOST: keycloak-db
+      KC_DB_URL_PORT: "5432"
+      KC_DB_URL_DATABASE: keycloak
+      KC_DB_USERNAME: kc_user
+      KC_DB_PASSWORD: kc_pass
+
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+      KC_HOSTNAME_ADMIN: localhost
+      KC_HTTP_ENABLED: "true"
+      KC_HTTP_HOST: "0.0.0.0"
+      KC_HTTP_PORT: "8080"
+      KEYCLOAK_IMPORT: /opt/keycloak/data/import/realm-export.json
+    ports:
+      - "8080:8080"
+      - "9000:9000"
+    volumes:
+      - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/keycloak/bin/kc.sh", "show-health"]
+      interval: 10s
+      timeout: 5s
+      start_period: 120s
+      retries: 10
+    depends_on:
+      keycloak-db:
+        condition: service_healthy
 
   unifor-db:
     image: postgres:15
@@ -27,13 +58,33 @@ services:
       POSTGRES_DB: unifor
       POSTGRES_USER: unifor
       POSTGRES_PASSWORD: unifor_pass
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U unifor -d unifor"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - unifor-db-data:/var/lib/postgresql/data
 
   backend:
-    build: .
+    build:
+      context: ./unifor-backend
+      dockerfile: Dockerfile
     ports:
       - "8081:8080"
     environment:
-      QUARKUS_PROFILE: dev
+      quarkus.oidc.auth-server-url: http://keycloak:8080/realms/unifor
+      quarkus.oidc.client-id: unifor-backend
+      quarkus.oidc.credentials.secret: 6Y86QWg9lBzBMHVy3qTQLLokxWAOZBMq
+      quarkus.oidc.application-type: service
     depends_on:
-      - unifor-db
-      - keycloak
+      keycloak:
+        condition: service_healthy
+      unifor-db:
+        condition: service_healthy
+
+volumes:
+  keycloak-db-data:
+  unifor-db-data:

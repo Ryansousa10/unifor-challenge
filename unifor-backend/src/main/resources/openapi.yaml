@@ -1,0 +1,868 @@
+openapi: 3.0.4
+info:
+  title: Sistema de Gestão Acadêmica - UNIFOR
+  description: |-
+    Esta API faz parte do desafio de desenvolvimento para a UNIFOR. O objetivo é fornecer uma interface REST para administração de alunos, professores, cursos, disciplinas, currículos e semestres.
+
+    ## Visões do Sistema
+    - **Administrador:** Incluir, excluir, atualizar e visualizar usuários.
+    - **Coordenador:** Incluir, excluir, atualizar e visualizar semestres, cursos e disciplinas; montar a matriz curricular.
+    - **Professor e Aluno:** Visualizar a matriz curricular.
+
+    ## Políticas de Acesso
+    - O controle de acesso é realizado via Keycloak, com os papéis: ADMIN, COORDENADOR, PROFESSOR, ALUNO.
+    - Cada endpoint está protegido conforme o perfil necessário, seguindo o escopo do desafio.
+    - As permissões de cada papel estão detalhadas no README e nas tags dos endpoints.
+
+    ## Decisões Técnicas e Suposições
+    - O backend expõe uma API REST documentada via OpenAPI (Swagger).
+    - O frontend (Angular) consome a API REST e implementa as visões conforme o perfil do usuário.
+    - O banco de dados utilizado é PostgreSQL, mas pode ser facilmente adaptado para outros bancos relacionais.
+    - O projeto utiliza Flyway para versionamento do banco.
+    - Testes unitários são implementados com JUnit 5.
+    - O backend está preparado para ser executado em ambiente Docker.
+    - O histórico de commits é mantido limpo e descritivo.
+    - Todas as decisões técnicas, bibliotecas e patterns utilizados estão documentados no README e nos comentários do código.
+
+    ## Tecnologias
+    - Backend: Java 17 + Quarkus
+    - Banco de dados: PostgreSQL
+    - Orquestração: Docker e docker-compose
+    - Documentação: OpenAPI 3.0 (Swagger)
+
+    ## Observações
+    - O desenvolvimento do frontend e backend é feito de forma separada.
+    - A aplicação é responsiva e preparada para dispositivos móveis.
+    - O processo para rodar a aplicação está documentado no README.
+    - Em caso de dúvidas, consulte o README ou envie e-mail para os avaliadores indicados no desafio.
+
+    Consulte o README para mais detalhes sobre decisões técnicas, suposições e instruções de uso.
+  contact:
+    name: Ryan de Sousa Silva
+    email: ryan.sousa4000@gmail.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: Servidor de Desenvolvimento
+
+tags:
+  - name: Usuários
+    description: Operações de administração de usuários (ADMIN)
+  - name: Cursos
+    description: Operações de administração de cursos (ADMIN, COORDENADOR)
+  - name: Disciplinas
+    description: Operações de administração de disciplinas (ADMIN, COORDENADOR)
+  - name: Currículos
+    description: Montagem e visualização da matriz curricular (ADMIN, COORDENADOR, PROFESSOR, ALUNO)
+  - name: Semestres
+    description: Operações de administração de semestres (ADMIN, COORDENADOR)
+
+paths:
+  /users:
+    get:
+      tags:
+        - Usuários
+      summary: Listar todos os usuários
+      description: Retorna uma lista com todos os usuários cadastrados no sistema
+      operationId: listUsers
+      security:
+        - KeycloakAuth: ['ADMIN']
+      responses:
+        '200':
+          description: Lista de usuários retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserResponse'
+        '401':
+          description: Não autorizado - autenticação necessária
+        '403':
+          description: Proibido - usuário não tem permissão de ADMIN
+    post:
+      tags:
+        - Usuários
+      summary: Criar novo usuário
+      description: Cria um novo usuário no sistema
+      operationId: createUser
+      security:
+        - KeycloakAuth: ['ADMIN']
+      requestBody:
+        description: Dados do novo usuário
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '201':
+          description: Usuário criado com sucesso
+        '400':
+          description: Dados inválidos fornecidos
+        '401':
+          description: Não autorizado - autenticação necessária
+        '403':
+          description: Proibido - usuário não tem permissão de ADMIN
+
+  /users/{id}:
+    get:
+      tags:
+        - Usuários
+      summary: Buscar usuário por ID
+      description: Retorna os dados de um usuário específico
+      operationId: getUser
+      security:
+        - KeycloakAuth: ['ADMIN']
+      parameters:
+        - name: id
+          in: path
+          description: ID do usuário
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Usuário encontrado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '404':
+          description: Usuário não encontrado
+        '401':
+          description: Não autorizado - autenticação necessária
+        '403':
+          description: Proibido - usuário não tem permissão de ADMIN
+
+    put:
+      tags:
+        - Usuários
+      summary: Atualizar usuário
+      description: Atualiza os dados de um usuário existente
+      operationId: updateUser
+      security:
+        - KeycloakAuth: ['ADMIN']
+      parameters:
+        - name: id
+          in: path
+          description: ID do usuário
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Novos dados do usuário
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '200':
+          description: Usuário atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '404':
+          description: Usuário não encontrado
+        '400':
+          description: Dados inválidos fornecidos
+        '401':
+          description: Não autorizado - autenticação necessária
+        '403':
+          description: Proibido - usuário não tem permissão de ADMIN
+
+    delete:
+      tags:
+        - Usuários
+      summary: Excluir usuário
+      description: Remove um usuário do sistema
+      operationId: deleteUser
+      security:
+        - KeycloakAuth: ['ADMIN']
+      parameters:
+        - name: id
+          in: path
+          description: ID do usuário
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Usuário excluído com sucesso
+        '404':
+          description: Usuário não encontrado
+        '401':
+          description: Não autorizado - autenticação necessária
+        '403':
+          description: Proibido - usuário não tem permissão de ADMIN
+
+  /discipline:
+    get:
+      tags:
+        - Disciplinas
+      summary: Listar todas as disciplinas
+      description: Retorna uma lista com todas as disciplinas cadastradas no sistema
+      operationId: listDisciplines
+      security:
+        - KeycloakAuth: ['ADMIN', 'COORDENADOR']
+      responses:
+        '200':
+          description: Lista de disciplinas retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DisciplineResponse'
+        '401':
+          description: Não autorizado - autenticação necessária
+        '403':
+          description: Proibido - usuário não tem permissão
+    post:
+      tags:
+        - Disciplinas
+      summary: Criar nova disciplina
+      description: Cria uma nova disciplina no sistema
+      operationId: createDiscipline
+      security:
+        - KeycloakAuth: ['ADMIN', 'COORDENADOR']
+      requestBody:
+        description: Dados da nova disciplina
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DisciplineRequest'
+      responses:
+        '201':
+          description: Disciplina criada com sucesso
+        '400':
+          description: Dados inválidos fornecidos
+        '401':
+          description: Não autorizado - autenticação necessária
+        '403':
+          description: Proibido - usuário não tem permissão
+
+  /discipline/{id}:
+    get:
+      tags:
+        - Disciplinas
+      summary: Buscar disciplina por ID
+      description: Retorna os dados de uma disciplina específica
+      operationId: getDiscipline
+      security:
+        - KeycloakAuth: ['ADMIN', 'COORDENADOR']
+      parameters:
+        - name: id
+          in: path
+          description: ID da disciplina
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Disciplina encontrada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisciplineResponse'
+        '404':
+          description: Disciplina não encontrada
+        '401':
+          description: Não autorizado - autenticação necessária
+
+    put:
+      tags:
+        - Disciplinas
+      summary: Atualizar disciplina
+      description: Atualiza os dados de uma disciplina existente
+      operationId: updateDiscipline
+      security:
+        - KeycloakAuth: ['ADMIN', 'COORDENADOR']
+      parameters:
+        - name: id
+          in: path
+          description: ID da disciplina
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Novos dados da disciplina
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DisciplineRequest'
+      responses:
+        '200':
+          description: Disciplina atualizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisciplineResponse'
+        '404':
+          description: Disciplina não encontrada
+        '400':
+          description: Dados inválidos fornecidos
+        '401':
+          description: Não autorizado - autenticação necessária
+
+    delete:
+      tags:
+        - Disciplinas
+      summary: Excluir disciplina
+      description: Remove uma disciplina do sistema
+      operationId: deleteDiscipline
+      security:
+        - KeycloakAuth: ['ADMIN', 'COORDENADOR']
+      parameters:
+        - name: id
+          in: path
+          description: ID da disciplina
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Disciplina excluída com sucesso
+        '404':
+          description: Disciplina não encontrada
+        '401':
+          description: Não autorizado - autenticação necessária
+        '403':
+          description: Proibido - usuário não tem permissão
+
+  /course:
+    get:
+      tags:
+        - Cursos
+      summary: Listar todos os cursos
+      description: Retorna uma lista com todos os cursos cadastrados no sistema
+      operationId: listCourses
+      security:
+        - KeycloakAuth: ['ADMIN', 'COORDENADOR']
+      responses:
+        '200':
+          description: Lista de cursos retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CourseResponse'
+        '401':
+          description: Não autorizado - autenticação necessária
+        '403':
+          description: Proibido - usuário não tem permissão
+    post:
+      tags:
+        - Cursos
+      summary: Criar novo curso
+      description: Cria um novo curso no sistema
+      operationId: createCourse
+      security:
+        - KeycloakAuth: ['ADMIN', 'COORDENADOR']
+      requestBody:
+        description: Dados do novo curso
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseRequest'
+      responses:
+        '201':
+          description: Curso criado com sucesso
+        '400':
+          description: Dados inválidos fornecidos
+        '401':
+          description: Não autorizado - autenticação necessária
+        '403':
+          description: Proibido - usuário não tem permissão
+
+  /course/{id}:
+    get:
+      tags:
+        - Cursos
+      summary: Buscar curso por ID
+      description: Retorna os dados de um curso específico
+      operationId: getCourse
+      security:
+        - KeycloakAuth: ['ADMIN', 'COORDENADOR']
+      parameters:
+        - name: id
+          in: path
+          description: ID do curso
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Curso encontrado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseResponse'
+        '404':
+          description: Curso não encontrado
+        '401':
+          description: Não autorizado - autenticação necessária
+    put:
+      tags:
+        - Cursos
+      summary: Atualizar curso
+      description: Atualiza os dados de um curso existente
+      operationId: updateCourse
+      security:
+        - KeycloakAuth: ['ADMIN', 'COORDENADOR']
+      parameters:
+        - name: id
+          in: path
+          description: ID do curso
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Novos dados do curso
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseRequest'
+      responses:
+        '200':
+          description: Curso atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseResponse'
+        '404':
+          description: Curso não encontrado
+        '400':
+          description: Dados inválidos fornecidos
+        '401':
+          description: Não autorizado - autenticação necessária
+    delete:
+      tags:
+        - Cursos
+      summary: Excluir curso
+      description: Remove um curso do sistema
+      operationId: deleteCourse
+      security:
+        - KeycloakAuth: ['ADMIN', 'COORDENADOR']
+      parameters:
+        - name: id
+          in: path
+          description: ID do curso
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Curso excluído com sucesso
+        '404':
+          description: Curso não encontrado
+        '401':
+          description: Não autorizado - autenticação necessária
+        '403':
+          description: Proibido - usuário não tem permissão
+
+  /semester:
+    get:
+      tags:
+        - Semestres
+      summary: Listar todos os semestres
+      description: Retorna uma lista com todos os semestres cadastrados no sistema
+      operationId: listSemesters
+      security:
+        - KeycloakAuth: ['ADMIN', 'COORDENADOR']
+      responses:
+        '200':
+          description: Lista de semestres retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SemesterResponse'
+        '401':
+          description: Não autorizado - autenticação necessária
+        '403':
+          description: Proibido - usuário não tem permissão
+    post:
+      tags:
+        - Semestres
+      summary: Criar novo semestre
+      description: Cria um novo semestre no sistema
+      operationId: createSemester
+      security:
+        - KeycloakAuth: ['ADMIN', 'COORDENADOR']
+      requestBody:
+        description: Dados do novo semestre
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SemesterRequest'
+      responses:
+        '201':
+          description: Semestre criado com sucesso
+        '400':
+          description: Dados inválidos fornecidos
+        '401':
+          description: Não autorizado - autenticação necessária
+        '403':
+          description: Proibido - usuário não tem permissão
+
+  /semester/{id}:
+    get:
+      tags:
+        - Semestres
+      summary: Buscar semestre por ID
+      description: Retorna os dados de um semestre específico
+      operationId: getSemester
+      security:
+        - KeycloakAuth: ['ADMIN', 'COORDENADOR']
+      parameters:
+        - name: id
+          in: path
+          description: ID do semestre
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Semestre encontrado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SemesterResponse'
+        '404':
+          description: Semestre não encontrado
+        '401':
+          description: Não autorizado - autenticação necessária
+    put:
+      tags:
+        - Semestres
+      summary: Atualizar semestre
+      description: Atualiza os dados de um semestre existente
+      operationId: updateSemester
+      security:
+        - KeycloakAuth: ['ADMIN', 'COORDENADOR']
+      parameters:
+        - name: id
+          in: path
+          description: ID do semestre
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Novos dados do semestre
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SemesterRequest'
+      responses:
+        '200':
+          description: Semestre atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SemesterResponse'
+        '404':
+          description: Semestre não encontrado
+        '400':
+          description: Dados inválidos fornecidos
+        '401':
+          description: Não autorizado - autenticação necessária
+    delete:
+      tags:
+        - Semestres
+      summary: Excluir semestre
+      description: Remove um semestre do sistema
+      operationId: deleteSemester
+      security:
+        - KeycloakAuth: ['ADMIN', 'COORDENADOR']
+      parameters:
+        - name: id
+          in: path
+          description: ID do semestre
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Semestre excluído com sucesso
+        '404':
+          description: Semestre não encontrado
+        '401':
+          description: Não autorizado - autenticação necessária
+        '403':
+          description: Proibido - usuário não tem permissão
+
+components:
+  schemas:
+    UserRequest:
+      type: object
+      required:
+        - username
+        - password
+        - firstName
+        - lastName
+        - email
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 50
+          example: john.doe
+        password:
+          type: string
+          minLength: 6
+          example: "123456"
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Doe
+        email:
+          type: string
+          format: email
+          example: john.doe@example.com
+        roles:
+          type: array
+          items:
+            type: string
+            format: uuid
+          example: ["550e8400-e29b-41d4-a716-446655440000"]
+
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        username:
+          type: string
+          example: john.doe
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Doe
+        email:
+          type: string
+          format: email
+          example: john.doe@example.com
+        roles:
+          type: array
+          items:
+            type: string
+            format: uuid
+          example: ["550e8400-e29b-41d4-a716-446655440000"]
+
+    DisciplineRequest:
+      type: object
+      required:
+        - name
+        - code
+        - credits
+      properties:
+        name:
+          type: string
+          minLength: 3
+          maxLength: 100
+          example: Introdução à Programação
+        code:
+          type: string
+          minLength: 2
+          maxLength: 10
+          example: "CS101"
+        credits:
+          type: integer
+          example: 6
+        semester:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+
+    DisciplineResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        name:
+          type: string
+          example: Introdução à Programação
+        code:
+          type: string
+          example: CS101
+        credits:
+          type: integer
+          example: 6
+        semester:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+
+    CourseRequest:
+      type: object
+      required:
+        - name
+        - code
+      properties:
+        name:
+          type: string
+          minLength: 3
+          maxLength: 100
+          example: Engenharia de Software
+        code:
+          type: string
+          minLength: 2
+          maxLength: 20
+          example: "ENGSW"
+        description:
+          type: string
+          example: Curso voltado para desenvolvimento de software.
+
+    CourseResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        name:
+          type: string
+          example: Engenharia de Software
+        code:
+          type: string
+          example: ENGSW
+        description:
+          type: string
+          example: Curso voltado para desenvolvimento de software.
+
+    CurriculumRequest:
+      type: object
+      required:
+        - courseId
+        - semesterId
+      properties:
+        courseId:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        semesterId:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174001"
+
+    CurriculumResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174002"
+        courseId:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        semesterId:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174001"
+
+    SemesterRequest:
+      type: object
+      required:
+        - name
+        - startDate
+        - endDate
+      properties:
+        name:
+          type: string
+          minLength: 3
+          maxLength: 20
+          example: 2024.1
+        startDate:
+          type: string
+          format: date
+          example: 2024-01-15
+        endDate:
+          type: string
+          format: date
+          example: 2024-06-30
+
+    SemesterResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174003"
+        name:
+          type: string
+          description: |
+            Nome do semestre letivo (ex: 2024.1)
+          example: 2024.1
+        startDate:
+          type: string
+          format: date
+          description: Data de início do semestre
+          example: 2024-01-15
+        endDate:
+          type: string
+          format: date
+          description: Data de término do semestre
+          example: 2024-06-30
+  examples:
+    UserRequestExample:
+      value:
+        username: maria.silva
+        password: "senhaSegura123"
+        firstName: Maria
+        lastName: Silva
+        email: maria.silva@unifor.br
+        roles:
+          - "550e8400-e29b-41d4-a716-446655440000"
+    UserResponseExample:
+      value:
+        id: "123e4567-e89b-12d3-a456-426614174000"
+        username: maria.silva
+        firstName: Maria
+        lastName: Silva
+        email: maria.silva@unifor.br
+        roles:
+          - "550e8400-e29b-41d4-a716-446655440000"
+  securitySchemes:
+    KeycloakAuth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: http://localhost:8180/auth/realms/unifor/protocol/openid-connect/auth
+          scopes:
+            ADMIN: Acesso administrativo completo
