@@ -1,0 +1,45 @@
+<div class="course-list-container">
+  <div class="course-list-header">
+    <h2>Gerenciamento de Cursos</h2>
+    <button class="btn-primary" (click)="navigateToNewCourse()">Novo Curso</button>
+  </div>
+
+  <div class="alert alert-error" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <div class="loading-indicator" *ngIf="loading">
+    Carregando cursos...
+  </div>
+
+  <div class="table-responsive" *ngIf="!loading && courses.length > 0">
+    <table class="course-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Código</th>
+          <th>Descrição</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let course of courses">
+          <td>{{ course.id }}</td>
+          <td>{{ course.name }}</td>
+          <td>{{ course.code }}</td>
+          <td>{{ course.description || 'Sem descrição' }}</td>
+          <td class="actions-column">
+            <button class="btn-edit" (click)="editCourse(course.id!)">Editar</button>
+            <button class="btn-delete" (click)="deleteCourse(course.id!)">Excluir</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && courses.length === 0">
+    <p>Nenhum curso encontrado.</p>
+    <button class="btn-primary" (click)="navigateToNewCourse()">Adicionar Curso</button>
+  </div>
+</div>
