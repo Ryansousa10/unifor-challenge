@@ -1,0 +1,47 @@
+<div class="discipline-list-container">
+  <div class="discipline-list-header">
+    <h2>Gerenciamento de Disciplinas</h2>
+    <button class="btn-primary" (click)="navigateToNewDiscipline()">Nova Disciplina</button>
+  </div>
+
+  <div class="alert alert-error" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <div class="loading-indicator" *ngIf="loading">
+    Carregando disciplinas...
+  </div>
+
+  <div class="table-responsive" *ngIf="!loading && disciplines.length > 0">
+    <table class="discipline-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Código</th>
+          <th>Carga Horária</th>
+          <th>Descrição</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let discipline of disciplines">
+          <td>{{ discipline.id }}</td>
+          <td>{{ discipline.name }}</td>
+          <td>{{ discipline.code }}</td>
+          <td>{{ discipline.workload }} horas</td>
+          <td>{{ discipline.description || 'Sem descrição' }}</td>
+          <td class="actions-column">
+            <button class="btn-edit" (click)="editDiscipline(discipline.id!)">Editar</button>
+            <button class="btn-delete" (click)="deleteDiscipline(discipline.id!)">Excluir</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && disciplines.length === 0">
+    <p>Nenhuma disciplina encontrada.</p>
+    <button class="btn-primary" (click)="navigateToNewDiscipline()">Adicionar Disciplina</button>
+  </div>
+</div>
