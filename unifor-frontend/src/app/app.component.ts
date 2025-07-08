@@ -11,6 +11,7 @@ export class AppComponent implements OnInit {
   userProfile: any = null;
   userInfo: any = null;
   userRoles: string[] = [];
+  filteredRoles: string[] = [];
 
   constructor(private authService: AuthService) {}
 
@@ -19,6 +20,9 @@ export class AppComponent implements OnInit {
       this.userProfile = await this.authService.getUserProfile();
       this.userInfo = this.authService.getUserInfo();
       this.userRoles = this.authService.getUserRoles();
+
+      const systemRoles = ['ADMIN', 'COORDENADOR', 'PROFESSOR', 'ALUNO'];
+      this.filteredRoles = this.userRoles.filter(role => systemRoles.includes(role));
     }
   }
 

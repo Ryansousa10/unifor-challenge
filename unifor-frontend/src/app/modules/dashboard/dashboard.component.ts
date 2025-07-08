@@ -17,7 +17,7 @@ export class DashboardComponent implements OnInit {
   connectionResults: any = {};
 
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     private userService: UserService,
     private academicService: AcademicService,
     private router: Router
@@ -40,6 +40,18 @@ export class DashboardComponent implements OnInit {
 
   navigateToCoordinatorPanel() {
     this.router.navigate(['/coordinator']);
+  }
+
+  navigateToProfessorPanel() {
+    this.router.navigate(['/professor']);
+  }
+
+  navigateToStudentPanel() {
+    this.router.navigate(['/student']);
+  }
+
+  navigateToViewCurriculums() {
+    this.router.navigate(['/view/curriculums']);
   }
 
   navigateToViewPanel() {
@@ -149,5 +161,21 @@ export class DashboardComponent implements OnInit {
 
   getObjectEntries(obj: any): [string, any][] {
     return Object.entries(obj);
+  }
+
+  getPrimaryRole(): string {
+    const rolePriority = ['ADMIN', 'COORDENADOR', 'PROFESSOR', 'ALUNO'];
+
+    const filteredRoles = this.userRoles.filter(role =>
+      rolePriority.includes(role)
+    );
+
+    for (const role of rolePriority) {
+      if (filteredRoles.includes(role)) {
+        return role;
+      }
+    }
+
+    return '';
   }
 }

@@ -23,11 +23,11 @@ export class CurriculumViewComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.loadCurriculumWithDisciplines(+id);
+      this.loadCurriculumWithDisciplines(id);
     }
   }
 
-  loadCurriculumWithDisciplines(id: number): void {
+  loadCurriculumWithDisciplines(id: string): void {
     this.loading = true;
     this.error = '';
 

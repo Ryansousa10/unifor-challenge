@@ -16,7 +16,9 @@ export class AuthService {
   }
 
   getUserRoles(): string[] {
-    return this.keycloakService.getUserRoles();
+    const allRoles = this.keycloakService.getUserRoles();
+    const systemRoles = ['ADMIN', 'COORDENADOR', 'PROFESSOR', 'ALUNO'];
+    return allRoles.filter(role => systemRoles.includes(role));
   }
 
   hasRole(role: string): boolean {

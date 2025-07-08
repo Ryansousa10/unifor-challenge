@@ -9,49 +9,41 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class CurriculumService {
-  private baseUrl = `${environment.backend.url}${environment.backend.apiPath}`;
+  private getApiUrl() {
+    return `${environment.backend.url}${environment.backend.apiPath}`;
+  }
 
   constructor(private http: HttpClient) { }
 
   getCurriculums(): Observable<Curriculum[]> {
-    return this.http.get<Curriculum[]>(`${this.baseUrl}/curriculums`);
+    return this.http.get<Curriculum[]>(`${this.getApiUrl()}/curriculums`);
   }
 
-  getCurriculum(id: number): Observable<Curriculum> {
-    return this.http.get<Curriculum>(`${this.baseUrl}/curriculums/${id}`);
+  getCurriculum(id: string): Observable<Curriculum> {
+    return this.http.get<Curriculum>(`${this.getApiUrl()}/curriculums/${id}`);
+  }
+
+  getCurriculumWithDisciplines(id: string): Observable<CurriculumWithDisciplines> {
+    return this.http.get<CurriculumWithDisciplines>(`${this.getApiUrl()}/curriculums/${id}/disciplines`);
   }
 
   createCurriculum(curriculum: Curriculum): Observable<Curriculum> {
-    return this.http.post<Curriculum>(`${this.baseUrl}/curriculums`, curriculum);
+    return this.http.post<Curriculum>(`${this.getApiUrl()}/curriculums`, curriculum);
   }
 
-  updateCurriculum(id: number, curriculum: Curriculum): Observable<Curriculum> {
-    return this.http.put<Curriculum>(`${this.baseUrl}/curriculums/${id}`, curriculum);
+  updateCurriculum(id: string, curriculum: Curriculum): Observable<Curriculum> {
+    return this.http.put<Curriculum>(`${this.getApiUrl()}/curriculums/${id}`, curriculum);
   }
 
-  deleteCurriculum(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/curriculums/${id}`);
+  deleteCurriculum(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.getApiUrl()}/curriculums/${id}`);
   }
 
-  getCurriculumWithDisciplines(curriculumId: number): Observable<CurriculumWithDisciplines> {
-    return this.http.get<CurriculumWithDisciplines>(`${this.baseUrl}/curriculums/${curriculumId}/disciplines`);
+  addDisciplineToCurriculum(curriculumId: string, disciplineId: string, data: CurricDisc): Observable<any> {
+    return this.http.post(`${this.getApiUrl()}/curriculums/${curriculumId}/disciplines/${disciplineId}`, data);
   }
 
-  addDisciplineToCurriculum(curricDisc: CurricDisc): Observable<CurricDisc> {
-    return this.http.post<CurricDisc>(`${this.baseUrl}/curricdiscs`, curricDisc);
-  }
-
-  updateDisciplineInCurriculum(curricDisc: CurricDisc): Observable<CurricDisc> {
-    const curriculumId = curricDisc.curriculumId || curricDisc.id?.curriculumId;
-    const disciplineId = curricDisc.disciplineId || curricDisc.id?.disciplineId;
-
-    return this.http.put<CurricDisc>(
-      `${this.baseUrl}/curricdiscs/${curriculumId}/${disciplineId}`,
-      curricDisc
-    );
-  }
-
-  removeDisciplineFromCurriculum(curriculumId: number, disciplineId: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/curricdiscs/${curriculumId}/${disciplineId}`);
+  removeDisciplineFromCurriculum(curriculumId: string, disciplineId: string): Observable<void> {
+    return this.http.delete<void>(`${this.getApiUrl()}/curriculums/${curriculumId}/disciplines/${disciplineId}`);
   }
 }
