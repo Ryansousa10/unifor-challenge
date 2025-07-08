@@ -19,16 +19,17 @@ public class Discipline extends PanacheEntityBase {
     // - id: identificador único da disciplina (UUID)
     // - code: código institucional da disciplina (único)
     // - name: nome completo da disciplina
-    // - credits: número de créditos/carga horária
+    // - credits: número de créditos
+    // - workload: carga horária da disciplina em horas
     // - description: descrição detalhada da disciplina (opcional)
     //
     // Relacionamentos:
     // - Uma disciplina pode estar em várias matrizes curriculares (CurricDisc)
     //
     // Regras:
-    // - O código, nome e créditos são obrigatórios
+    // - O código, nome, créditos e carga horária são obrigatórios
     // - O código deve ser único no sistema
-    // - Os créditos devem ser um número positivo
+    // - Os créditos e a carga horária devem ser números positivos
     //
     // Observações:
     // - Utiliza Panache para persistência
@@ -46,6 +47,9 @@ public class Discipline extends PanacheEntityBase {
 
     @Column(nullable = false)
     private Integer credits;
+
+    @Column(nullable = false)
+    private Integer workload;
 
     @Column(columnDefinition = "TEXT")
     private String description;
