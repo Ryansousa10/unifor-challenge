@@ -1,0 +1,78 @@
+<div class="dashboard-container">
+  <div class="header">
+    <h1>Sistema Acadêmico - Unifor</h1>
+    <p>Bem-vindo(a), {{ userName }}</p>
+  </div>
+
+  <!-- Seção de Debug para identificar roles -->
+  <div class="debug-section" style="margin-bottom: 20px; padding: 15px; background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px;">
+    <h3>🔍 Debug - Roles do Usuário</h3>
+    <p><strong>Roles detectados:</strong> {{ userRoles.length > 0 ? userRoles.join(', ') : 'Nenhum role encontrado' }}</p>
+    <div style="margin-top: 10px;">
+      <small>
+        ✅ ADMIN: {{ userRoles.includes('ADMIN') ? 'SIM' : 'NÃO' }} |
+        ✅ COORDENADOR: {{ userRoles.includes('COORDENADOR') ? 'SIM' : 'NÃO' }} |
+        ✅ PROFESSOR: {{ userRoles.includes('PROFESSOR') ? 'SIM' : 'NÃO' }} |
+        ✅ ALUNO: {{ userRoles.includes('ALUNO') ? 'SIM' : 'NÃO' }}
+      </small>
+    </div>
+  </div>
+
+  <!-- Botão de teste de conectividade -->
+  <div class="test-section" style="margin-bottom: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 8px;">
+    <h3>Teste de Conectividade</h3>
+    <button
+      class="btn btn-test"
+      (click)="testBackendConnection()"
+      [disabled]="testingConnection"
+      style="background-color: #17a2b8; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
+      {{ testingConnection ? 'Testando...' : 'Testar Conexão com Backend' }}
+    </button>
+
+    <!-- Resultados do teste -->
+    <div *ngIf="getObjectKeys(connectionResults).length > 0" style="margin-top: 15px;">
+      <h4>Resultados:</h4>
+      <div *ngFor="let result of getObjectEntries(connectionResults)" style="margin: 5px 0;">
+        <span [style.color]="result[1].success ? 'green' : 'red'">
+          {{ result[1].success ? '✅' : '❌' }} {{ result[0] | titlecase }}
+        </span>
+        <span *ngIf="!result[1].success"> - {{ result[1].error?.message || 'Erro desconhecido' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cards-container">
+    <!-- Card para Administrador -->
+    <div class="card" *ngIf="hasAdminRole()" (click)="navigateToAdminPanel()">
+      <div class="card-icon">
+        <i class="fa fa-users"></i>
+      </div>
+      <div class="card-content">
+        <h2>Administração</h2>
+        <p>Gerenciar usuários do sistema</p>
+      </div>
+    </div>
+
+    <!-- Card para Coordenador -->
+    <div class="card" *ngIf="hasCoordinatorRole()" (click)="navigateToCoordinatorPanel()">
+      <div class="card-icon">
+        <i class="fa fa-graduation-cap"></i>
+      </div>
+      <div class="card-content">
+        <h2>Coordenação</h2>
+        <p>Gerenciar cursos, disciplinas e matrizes curriculares</p>
+      </div>
+    </div>
+
+    <!-- Card para Professor/Aluno -->
+    <div class="card" *ngIf="hasTeacherOrStudentRole()" (click)="navigateToViewPanel()">
+      <div class="card-icon">
+        <i class="fa fa-book"></i>
+      </div>
+      <div class="card-content">
+        <h2>Visualização</h2>
+        <p>Consultar matrizes curriculares</p>
+      </div>
+    </div>
+  </div>
+</div>
