@@ -1,0 +1,104 @@
+<div class="user-form-container">
+    <h2>{{ isEditMode ? 'Editar' : 'Novo' }} Usuário</h2>
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+        <div *ngIf="errorMessage" class="user-form-error-modern">
+            <pre>{{ errorMessage }}</pre>
+        </div>
+
+        <div class="form-group">
+            <label for="username">Nome de Usuário <span style="color:#d32f2f">*</span></label>
+            <input type="text" id="username" formControlName="username">
+
+            <div class="user-form-error"
+                 *ngIf="
+             userForm.get('username')?.touched &&
+             userForm.get('username')?.invalid &&
+             !userForm.get('username')?.hasError('serverError')
+           ">
+                <span *ngIf="userForm.get('username')?.errors?.['required']" class="required-error">Campo obrigatório.</span>
+                <span *ngIf="userForm.get('username')?.errors?.['minlength']">Mínimo 6 caracteres.</span>
+            </div>
+
+            <div class="user-form-error"
+                 *ngIf="
+             userForm.get('username')?.touched &&
+             userForm.get('username')?.hasError('serverError')
+           ">
+                {{ userForm.get('username')?.getError('serverError') }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Senha <span style="color:#d32f2f">*</span></label>
+            <input type="password" id="password" formControlName="password">
+            <div class="user-form-error"
+                 *ngIf="
+             userForm.get('password')?.touched &&
+             userForm.get('password')?.invalid
+           ">
+                <span *ngIf="userForm.get('password')?.errors?.['required']" class="required-error">Campo obrigatório.</span>
+                <span *ngIf="userForm.get('password')?.errors?.['minlength']">Mínimo 6 caracteres.</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="firstName">Nome <span style="color:#d32f2f">*</span></label>
+            <input type="text" id="firstName" formControlName="firstName">
+            <div class="user-form-error"
+                 *ngIf="userForm.get('firstName')?.touched && userForm.get('firstName')?.invalid">
+                <span *ngIf="userForm.get('firstName')?.errors?.['required']" class="required-error">Campo obrigatório.</span>
+                <span *ngIf="userForm.get('firstName')?.errors?.['minlength']">Mínimo 2 caracteres.</span>
+                <span *ngIf="userForm.get('firstName')?.errors?.['pattern']" class="required-error">Apenas letras são permitidas.</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="lastName">Sobrenome <span style="color:#d32f2f">*</span></label>
+            <input type="text" id="lastName" formControlName="lastName">
+            <div class="user-form-error"
+                 *ngIf="userForm.get('lastName')?.touched && userForm.get('lastName')?.invalid">
+                <span *ngIf="userForm.get('lastName')?.errors?.['required']" class="required-error">Campo obrigatório.</span>
+                <span *ngIf="userForm.get('lastName')?.errors?.['minlength']">Mínimo 2 caracteres.</span>
+                <span *ngIf="userForm.get('lastName')?.errors?.['pattern']" class="required-error">Apenas letras são permitidas.</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email <span style="color:#d32f2f">*</span></label>
+            <input type="email" id="email" formControlName="email">
+            <div class="user-form-error"
+                 *ngIf="userForm.get('email')?.touched && userForm.get('email')?.invalid && !userForm.get('email')?.hasError('serverError')">
+                <span *ngIf="userForm.get('email')?.errors?.['required']" class="required-error">Campo obrigatório.</span>
+                <span *ngIf="userForm.get('email')?.errors?.['email'] || userForm.get('email')?.errors?.['pattern']" class="required-error">Informe um e-mail válido.</span>
+            </div>
+            <div class="user-form-error"
+                 *ngIf="userForm.get('email')?.touched && userForm.get('email')?.hasError('serverError')">
+                {{ userForm.get('email')?.getError('serverError') }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Perfis <span style="color:#d32f2f">*</span></label>
+            <div class="checkbox-group">
+                <div *ngFor="let role of availableRoles">
+                    <input
+                            type="checkbox"
+                            [id]="'role-' + role.id"
+                            [value]="role.id"
+                            (change)="onRoleChange(role.id, $event)"
+                            [checked]="selectedRoles.includes(role.id)"
+                    >
+                    <label [for]="'role-' + role.id">{{ role.description }}</label>
+                </div>
+            </div>
+            <div class="user-form-error required-error" *ngIf="hasRoleError() && userForm.touched">
+                Selecione pelo menos um perfil.
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="button" class="btn-secondary" (click)="cancel()">Cancelar</button>
+            <button type="submit" class="btn-primary" [disabled]="userForm.invalid || hasRoleError()">Salvar</button>
+        </div>
+    </form>
+</div>

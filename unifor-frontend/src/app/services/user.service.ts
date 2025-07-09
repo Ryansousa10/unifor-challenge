@@ -72,7 +72,6 @@ export class UserService {
       errorMessage = `Código do erro: ${error.status}\nMensagem: ${error.message}`;
     }
 
-    console.error('Erro na requisição HTTP:', error);
-    return throwError(() => new Error(errorMessage));
+    return throwError(() => errorMessage);
   }
 }
