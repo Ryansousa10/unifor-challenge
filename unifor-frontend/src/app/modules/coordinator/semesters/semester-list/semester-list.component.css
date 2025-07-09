@@ -1,4 +1,4 @@
-.user-list-container {
+.semester-list-container {
   max-width: 1200px;
   margin: 40px auto 0 auto;
   background: #fff;
@@ -7,14 +7,14 @@
   padding: 32px 28px 24px 28px;
 }
 
-.user-list-header {
+.semester-list-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
 }
 
-.user-list-header h2 {
+.semester-list-header h2 {
   font-size: 2rem;
   font-weight: 700;
   color: #003366;
@@ -61,7 +61,7 @@
   overflow-x: auto;
 }
 
-.user-table {
+.semester-table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
@@ -71,12 +71,12 @@
   box-shadow: 0 2px 12px rgba(0,0,0,0.04);
 }
 
-.user-table th, .user-table td {
+.semester-table th, .semester-table td {
   padding: 14px 12px;
   text-align: left;
 }
 
-.user-table th {
+.semester-table th {
   background: #f1f8fe;
   color: #003366;
   font-weight: 600;
@@ -84,18 +84,37 @@
   border-bottom: 2px solid #e3e8f0;
 }
 
-.user-table tbody tr {
-  border-bottom: 1.5px solid #f0f0f0;
+.semester-table tbody tr {
+  border-bottom: none;
   transition: background 0.15s;
+  position: relative;
 }
 
-.user-table tbody tr:hover {
-  background: #f7fafc;
+.semester-table tbody tr:last-child {
+  border-bottom: none;
 }
 
-.user-table td {
+.semester-table td {
   color: #222;
   font-size: 0.99rem;
+  background: #fff;
+  position: relative;
+}
+
+.semester-table tbody tr::after {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 0;
+  height: 1px;
+  background: #ececec;
+  pointer-events: none;
+}
+
+.semester-table tbody tr:last-child::after {
+  display: none;
 }
 
 .actions-column {
@@ -112,7 +131,7 @@
   padding: 0;
   font-size: 1.15rem;
   border-radius: 7px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
   transition: box-shadow 0.2s;
 }
 
@@ -130,7 +149,7 @@
 
 .btn-edit:hover {
   background: #003366;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.28);
 }
 
 .btn-delete {
@@ -147,7 +166,7 @@
 
 .btn-delete:hover {
   background: #c62828;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.28);
 }
 
 .empty-state {
@@ -158,28 +177,28 @@
 }
 
 @media (max-width: 900px) {
-  .user-list-container {
+  .semester-list-container {
     padding: 18px 4vw 16px 4vw;
   }
-  .user-list-header h2 {
+  .semester-list-header h2 {
     font-size: 1.3rem;
   }
-  .user-table th, .user-table td {
+  .semester-table th, .semester-table td {
     padding: 10px 6px;
     font-size: 0.95rem;
   }
 }
 
 @media (max-width: 600px) {
-  .user-list-header {
+  .semester-list-header {
     flex-direction: column;
     gap: 12px;
     align-items: stretch;
   }
-  .user-list-container {
+  .semester-list-container {
     padding: 10px 2vw 10px 2vw;
   }
-  .user-table th, .user-table td {
+  .semester-table th, .semester-table td {
     padding: 8px 4px;
     font-size: 0.92rem;
   }

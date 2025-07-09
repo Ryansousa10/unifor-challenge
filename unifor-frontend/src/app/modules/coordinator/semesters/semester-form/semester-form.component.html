@@ -1,0 +1,76 @@
+<div class="semester-form-container">
+  <h2>{{ isEditMode ? 'Editar' : 'Novo' }} Semestre</h2>
+  <form [formGroup]="semesterForm" (ngSubmit)="onSubmit()">
+    <div *ngIf="error" class="semester-form-error-modern">
+      <pre>{{ error }}</pre>
+    </div>
+    <div *ngIf="successMessage" class="semester-form-success-modern">
+      <pre>{{ successMessage }}</pre>
+    </div>
+
+    <div class="form-group">
+      <label for="year">Ano <span style="color:#d32f2f">*</span></label>
+      <input type="number" id="year" formControlName="year" min="2000" max="2100" placeholder="2025" maxlength="4" oninput="if(this.value.length>4)this.value=this.value.slice(0,4)">
+      <div class="semester-form-error" *ngIf="semesterForm.get('year')?.touched && semesterForm.get('year')?.invalid">
+        <span *ngIf="semesterForm.get('year')?.errors?.['required']" class="required-error">Campo obrigatório.</span>
+        <span *ngIf="semesterForm.get('year')?.errors?.['min'] || semesterForm.get('year')?.errors?.['max']" class="required-error">Ano entre 2000 e 2100.</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="semesterNumber">Semestre <span style="color:#d32f2f">*</span></label>
+      <select id="semesterNumber" formControlName="semesterNumber">
+        <option value="">Selecione</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+      </select>
+      <div class="semester-form-error" *ngIf="semesterForm.get('semesterNumber')?.touched && semesterForm.get('semesterNumber')?.invalid">
+        <span *ngIf="semesterForm.get('semesterNumber')?.errors?.['required']" class="required-error">Campo obrigatório.</span>
+        <span *ngIf="semesterForm.get('semesterNumber')?.errors?.['pattern']" class="required-error">Semestre deve ser 1 ou 2.</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Nome</label>
+      <div class="semester-preview-box">{{ semesterForm.get('name')?.value || '-' }}</div>
+    </div>
+
+    <div class="form-group">
+      <label for="startDate">Data de Início <span style="color:#d32f2f">*</span></label>
+      <input type="date" id="startDate" formControlName="startDate">
+      <div class="semester-form-error" *ngIf="semesterForm.get('startDate')?.touched && semesterForm.get('startDate')?.invalid">
+        <span *ngIf="semesterForm.get('startDate')?.errors?.['required']" class="required-error">Campo obrigatório.</span>
+        <span *ngIf="semesterForm.get('startDate')?.errors?.['yearMismatch']" class="required-error">A data de início deve ser do ano {{ semesterForm.get('year')?.value || '____' }}.</span>
+        <span *ngIf="semesterForm.get('startDate')?.errors?.['startRange'] && semesterForm.get('semesterNumber')?.value === '2'" class="required-error">
+          A data de início do 2º semestre deve ser entre 01/07 e 31/12 de {{ semesterForm.get('year')?.value || '____' }}.
+        </span>
+        <span *ngIf="semesterForm.get('startDate')?.errors?.['startRange'] && semesterForm.get('semesterNumber')?.value === '1'" class="required-error">
+          A data de início do 1º semestre deve ser entre 01/01 e 30/06 de {{ semesterForm.get('year')?.value || '____' }}.
+        </span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="endDate">Data de Término <span style="color:#d32f2f">*</span></label>
+      <input type="date" id="endDate" formControlName="endDate" [max]="maxEndDate">
+      <div class="semester-form-error" *ngIf="semesterForm.get('endDate')?.touched && semesterForm.get('endDate')?.invalid">
+        <span *ngIf="semesterForm.get('endDate')?.errors?.['required']" class="required-error">Campo obrigatório.</span>
+        <span *ngIf="!semesterForm.get('endDate')?.errors?.['required'] && semesterForm.get('endDate')?.errors?.['yearMismatch']" class="required-error">A data de término deve ser do ano {{ semesterForm.get('year')?.value || '____' }}.</span>
+        <span *ngIf="!semesterForm.get('endDate')?.errors?.['required'] && !semesterForm.get('endDate')?.errors?.['yearMismatch'] && semesterForm.get('endDate')?.errors?.['endRange'] && semesterForm.get('semesterNumber')?.value === '2'" class="required-error">
+          A data de término do 2º semestre deve ser entre a data de início e 31/12 de {{ semesterForm.get('year')?.value || '____' }}.
+        </span>
+        <span *ngIf="!semesterForm.get('endDate')?.errors?.['required'] && !semesterForm.get('endDate')?.errors?.['yearMismatch'] && semesterForm.get('endDate')?.errors?.['endRange'] && semesterForm.get('semesterNumber')?.value === '1'" class="required-error">
+          A data de término do 1º semestre deve ser entre a data de início e 30/06 de {{ semesterForm.get('year')?.value || '____' }}.
+        </span>
+        <span *ngIf="!semesterForm.get('endDate')?.errors?.['required'] && !semesterForm.get('endDate')?.errors?.['yearMismatch'] && !semesterForm.get('endDate')?.errors?.['endRange'] && semesterForm.get('endDate')?.value && maxEndDate && semesterForm.get('endDate')?.value > maxEndDate" class="required-error">
+          A data de término deve ser até {{ maxEndDate | date:'dd/MM/yyyy' }} para este semestre.
+        </span>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="cancel()">Cancelar</button>
+      <button type="submit" class="btn-primary" [disabled]="semesterForm.invalid">Salvar</button>
+    </div>
+  </form>
+</div>

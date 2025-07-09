@@ -1,0 +1,44 @@
+<div class="semester-list-container">
+  <div class="semester-list-header">
+    <h2>Gerenciamento de Semestres</h2>
+    <button class="btn-primary" (click)="navigateToNewSemester()">Novo Semestre</button>
+  </div>
+
+  <div class="loading-indicator" *ngIf="loading">
+    Carregando semestres...
+  </div>
+
+  <div class="table-responsive" *ngIf="!loading && semesters.length > 0">
+    <table class="semester-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Início</th>
+          <th>Fim</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let semester of semesters">
+          <td>{{ semester.id }}</td>
+          <td>{{ semester.name }}</td>
+          <td>{{ semester.startDate | date:'dd/MM/yyyy' }}</td>
+          <td>{{ semester.endDate | date:'dd/MM/yyyy' }}</td>
+          <td class="actions-column">
+            <button class="btn-edit" (click)="editSemester(semester.id)">
+              <i class="fa fa-edit"></i>
+            </button>
+            <button class="btn-delete" (click)="deleteSemester(semester.id)">
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && semesters.length === 0">
+    Nenhum semestre cadastrado.
+  </div>
+</div>

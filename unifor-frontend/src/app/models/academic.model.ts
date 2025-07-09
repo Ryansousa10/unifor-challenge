@@ -16,11 +16,7 @@ export interface Discipline {
 
 export interface Semester {
   id?: string;
-  code?: string;
-  description?: string;
-  number?: number;
-  year?: number;
-  active: boolean;
+  name: string;
   startDate: string;
   endDate: string;
 }
