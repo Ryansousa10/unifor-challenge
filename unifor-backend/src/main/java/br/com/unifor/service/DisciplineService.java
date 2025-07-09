@@ -41,6 +41,17 @@ public class DisciplineService {
 
     @Transactional
     public DisciplineResponseDTO createDiscipline(DisciplineRequestDTO dto) {
+        // Validação de duplicidade de código da disciplina
+        if (Discipline.find("code", dto.getCode()).firstResult() != null) {
+            throw new br.com.unifor.exception.DuplicateResourceException("Código de disciplina já cadastrado: " + dto.getCode());
+        }
+        // Validação de payload: nome e créditos obrigatórios
+        if (dto.getName() == null || dto.getName().isBlank()) {
+            throw new br.com.unifor.exception.InvalidPayloadException("Nome da disciplina é obrigatório");
+        }
+        if (dto.getCredits() == null || dto.getCredits() <= 0) {
+            throw new br.com.unifor.exception.InvalidPayloadException("Créditos da disciplina devem ser positivos");
+        }
         Discipline discipline = new Discipline();
         discipline.setCode(dto.getCode());
         discipline.setName(dto.getName());
@@ -55,6 +66,17 @@ public class DisciplineService {
         Discipline existing = Discipline.findById(id);
         if (existing == null) {
             throw new NotFoundException("Discipline not found: " + id);
+        }
+        // Validação de duplicidade de código (exceto a própria disciplina)
+        if (Discipline.find("code = ?1 and id <> ?2", dto.getCode(), id).firstResult() != null) {
+            throw new br.com.unifor.exception.DuplicateResourceException("Código de disciplina já cadastrado: " + dto.getCode());
+        }
+        // Validação de payload: nome e créditos obrigatórios
+        if (dto.getName() == null || dto.getName().isBlank()) {
+            throw new br.com.unifor.exception.InvalidPayloadException("Nome da disciplina é obrigatório");
+        }
+        if (dto.getCredits() == null || dto.getCredits() <= 0) {
+            throw new br.com.unifor.exception.InvalidPayloadException("Créditos da disciplina devem ser positivos");
         }
         existing.setCode(dto.getCode());
         existing.setName(dto.getName());

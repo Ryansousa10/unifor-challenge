@@ -51,6 +51,10 @@ public class CurriculumService {
         if (semester == null) {
             throw new NotFoundException("Semester not found: " + dto.getSemesterId());
         }
+        // Validação de duplicidade: não pode existir mais de uma matriz para o mesmo curso/semestre
+        if (br.com.unifor.domain.Curriculum.find("course = ?1 and semester = ?2", course, semester).firstResult() != null) {
+            throw new br.com.unifor.exception.DuplicateResourceException("Já existe uma matriz curricular para este curso e semestre");
+        }
         Curriculum curriculum = new Curriculum();
         curriculum.setCourse(course);
         curriculum.setSemester(semester);
@@ -71,6 +75,10 @@ public class CurriculumService {
         Semester semester = Semester.findById(dto.getSemesterId());
         if (semester == null) {
             throw new NotFoundException("Semester not found: " + dto.getSemesterId());
+        }
+        // Validação de duplicidade: não pode existir mais de uma matriz para o mesmo curso/semestre (exceto a própria)
+        if (br.com.unifor.domain.Curriculum.find("course = ?1 and semester = ?2 and id <> ?3", course, semester, id).firstResult() != null) {
+            throw new br.com.unifor.exception.DuplicateResourceException("Já existe uma matriz curricular para este curso e semestre");
         }
         existing.setCourse(course);
         existing.setSemester(semester);
