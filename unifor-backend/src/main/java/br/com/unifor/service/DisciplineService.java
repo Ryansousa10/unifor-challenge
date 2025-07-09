@@ -57,6 +57,7 @@ public class DisciplineService {
         discipline.setName(dto.getName());
         discipline.setCredits(dto.getCredits());
         discipline.setDescription(dto.getDescription());
+        discipline.setWorkload(dto.getWorkload());
         discipline.persist();
         return toResponseDTO(discipline);
     }
@@ -82,6 +83,7 @@ public class DisciplineService {
         existing.setName(dto.getName());
         existing.setCredits(dto.getCredits());
         existing.setDescription(dto.getDescription());
+        existing.setWorkload(dto.getWorkload());
         return toResponseDTO(existing);
     }
 
@@ -99,6 +101,7 @@ public class DisciplineService {
         dto.setCode(discipline.getCode());
         dto.setName(discipline.getName());
         dto.setCredits(discipline.getCredits());
+        dto.setWorkload(discipline.getWorkload());
         dto.setDescription(discipline.getDescription());
         return dto;
     }
