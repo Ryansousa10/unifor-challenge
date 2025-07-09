@@ -38,6 +38,14 @@ body {
     transition: background-color var(--transition-speed) ease;
 }
 
+/* Permitir seleção de texto globalmente */
+body, html, * {
+    user-select: text !important;
+    -webkit-user-select: text !important;
+    -moz-user-select: text !important;
+    -ms-user-select: text !important;
+}
+
 .container {
     max-width: 1300px;
     margin: 0 auto;

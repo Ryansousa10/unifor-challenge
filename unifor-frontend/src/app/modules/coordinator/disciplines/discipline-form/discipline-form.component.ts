@@ -112,13 +112,29 @@ export class DisciplineFormComponent implements OnInit {
           this.loading = false;
           setTimeout(() => this.navigateBack(), 2000);
         },
-        error: (err) => {
-          this.error = 'Erro ao criar disciplina.';
-          console.error('Erro ao criar disciplina:', err);
-          this.loading = false;
-        }
+        error: (err) => this.handleSubmitError(err)
       });
     }
+  }
+
+  private handleSubmitError(err: any) {
+    let errorMsg = (err.error?.message || err.message || JSON.stringify(err)).toLowerCase();
+    if (
+      err.status === 409 ||
+      (typeof err === 'string' && err.includes('409')) ||
+      (err.error && typeof err.error === 'string' && (err.error.includes('409') || err.error.includes('conflict')))
+    ) {
+      if (errorMsg.includes('código') || errorMsg.includes('code')) {
+        this.error = 'Já existe uma disciplina cadastrada com este código.';
+      } else if (errorMsg.includes('name') || errorMsg.includes('nome')) {
+        this.error = 'Já existe uma disciplina cadastrada com este nome.';
+      } else {
+        this.error = 'Já existe uma disciplina cadastrada com este código.';
+      }
+    } else {
+      this.error = 'Erro ao salvar disciplina: ' + (err.error?.message || err.message || JSON.stringify(err));
+    }
+    this.loading = false;
   }
 
   navigateBack(): void {

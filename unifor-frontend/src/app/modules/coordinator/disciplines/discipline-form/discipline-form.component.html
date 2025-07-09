@@ -1,14 +1,13 @@
 <div class="discipline-form-container">
   <div class="discipline-form-header">
     <h2>{{ isEditMode ? 'Editar' : 'Nova' }} Disciplina</h2>
-    <button class="btn-secondary" (click)="navigateBack()">Voltar</button>
   </div>
 
-  <div class="alert alert-error" *ngIf="error">
-    {{ error }}
+  <div *ngIf="error" class="discipline-form-error-modern">
+    <pre>{{ error }}</pre>
   </div>
 
-  <div class="alert alert-success" *ngIf="success">
+  <div *ngIf="success" class="alert alert-success">
     {{ success }}
   </div>
 
@@ -26,8 +25,8 @@
         class="form-control"
         [class.is-invalid]="nameControl?.invalid && nameControl?.touched"
       >
-      <div class="error-message" *ngIf="nameControl?.invalid && nameControl?.touched">
-        <span *ngIf="nameControl?.errors?.['required']">Nome da disciplina é obrigatório.</span>
+      <div class="discipline-form-error" *ngIf="nameControl?.invalid && nameControl?.touched">
+        <span *ngIf="nameControl?.errors?.['required']" class="required-error">Nome da disciplina é obrigatório.</span>
       </div>
     </div>
 
@@ -40,8 +39,8 @@
         class="form-control"
         [class.is-invalid]="codeControl?.invalid && codeControl?.touched"
       >
-      <div class="error-message" *ngIf="codeControl?.invalid && codeControl?.touched">
-        <span *ngIf="codeControl?.errors?.['required']">Código da disciplina é obrigatório.</span>
+      <div class="discipline-form-error" *ngIf="codeControl?.invalid && codeControl?.touched">
+        <span *ngIf="codeControl?.errors?.['required']" class="required-error">Código da disciplina é obrigatório.</span>
       </div>
     </div>
 
@@ -55,9 +54,9 @@
         [class.is-invalid]="workloadControl?.invalid && workloadControl?.touched"
         min="1"
       >
-      <div class="error-message" *ngIf="workloadControl?.invalid && workloadControl?.touched">
-        <span *ngIf="workloadControl?.errors?.['required']">Carga horária é obrigatória.</span>
-        <span *ngIf="workloadControl?.errors?.['min']">Carga horária deve ser maior que zero.</span>
+      <div class="discipline-form-error" *ngIf="workloadControl?.invalid && workloadControl?.touched">
+        <span *ngIf="workloadControl?.errors?.['required']" class="required-error">Carga horária é obrigatória.</span>
+        <span *ngIf="workloadControl?.errors?.['min']" class="required-error">Carga horária deve ser maior que zero.</span>
       </div>
     </div>
 
@@ -72,10 +71,10 @@
         min="1"
         max="10"
       >
-      <div class="error-message" *ngIf="creditsControl?.invalid && creditsControl?.touched">
-        <span *ngIf="creditsControl?.errors?.['required']">Número de créditos é obrigatório.</span>
-        <span *ngIf="creditsControl?.errors?.['min']">Créditos deve ser maior que zero.</span>
-        <span *ngIf="creditsControl?.errors?.['max']">Créditos não pode ser maior que 10.</span>
+      <div class="discipline-form-error" *ngIf="creditsControl?.invalid && creditsControl?.touched">
+        <span *ngIf="creditsControl?.errors?.['required']" class="required-error">Número de créditos é obrigatório.</span>
+        <span *ngIf="creditsControl?.errors?.['min']" class="required-error">Créditos deve ser maior que zero.</span>
+        <span *ngIf="creditsControl?.errors?.['max']" class="required-error">Créditos não pode ser maior que 10.</span>
       </div>
     </div>
 

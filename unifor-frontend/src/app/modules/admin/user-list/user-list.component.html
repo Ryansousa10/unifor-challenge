@@ -38,8 +38,12 @@
           </td>
           <td>{{ user.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
           <td class="actions-column">
-            <button class="btn-edit" (click)="editUser(user.id!)">Editar</button>
-            <button class="btn-delete" (click)="deleteUser(user.id!)">Excluir</button>
+            <button class="btn-edit" (click)="editUser(user.id!)">
+              <i class="fa fa-edit"></i>
+            </button>
+            <button class="btn-delete" (click)="deleteUser(user.id!)">
+              <i class="fa fa-trash"></i>
+            </button>
           </td>
         </tr>
       </tbody>

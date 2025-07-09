@@ -29,11 +29,15 @@
           <td>{{ discipline.id }}</td>
           <td>{{ discipline.name }}</td>
           <td>{{ discipline.code }}</td>
-          <td>{{ discipline.workload }} horas</td>
+          <td>{{ discipline.workload ? discipline.workload + ' horas' : '-' }}</td>
           <td>{{ discipline.description || 'Sem descrição' }}</td>
           <td class="actions-column">
-            <button class="btn-edit" (click)="editDiscipline(discipline.id!)">Editar</button>
-            <button class="btn-delete" (click)="deleteDiscipline(discipline.id!)">Excluir</button>
+            <button class="btn-edit" (click)="editDiscipline(discipline.id!)">
+              <i class="fa fa-edit"></i>
+            </button>
+            <button class="btn-delete" (click)="deleteDiscipline(discipline.id!)">
+              <i class="fa fa-trash"></i>
+            </button>
           </td>
         </tr>
       </tbody>

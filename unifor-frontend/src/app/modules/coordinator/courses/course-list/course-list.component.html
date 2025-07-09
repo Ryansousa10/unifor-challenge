@@ -30,8 +30,12 @@
           <td>{{ course.code }}</td>
           <td>{{ course.description || 'Sem descrição' }}</td>
           <td class="actions-column">
-            <button class="btn-edit" (click)="editCourse(course.id!)">Editar</button>
-            <button class="btn-delete" (click)="deleteCourse(course.id!)">Excluir</button>
+            <button class="btn-edit" (click)="editCourse(course.id!)">
+              <i class="fa fa-edit"></i>
+            </button>
+            <button class="btn-delete" (click)="deleteCourse(course.id!)">
+              <i class="fa fa-trash"></i>
+            </button>
           </td>
         </tr>
       </tbody>

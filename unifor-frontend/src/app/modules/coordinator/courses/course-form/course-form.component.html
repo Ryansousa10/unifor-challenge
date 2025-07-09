@@ -1,61 +1,31 @@
 <div class="course-form-container">
-  <div class="course-form-header">
-    <h2>{{ isEditMode ? 'Editar' : 'Novo' }} Curso</h2>
-    <button class="btn-secondary" (click)="navigateBack()">Voltar</button>
-  </div>
-
-  <div class="alert alert-error" *ngIf="error">
-    {{ error }}
-  </div>
-
-  <div class="alert alert-success" *ngIf="success">
-    {{ success }}
-  </div>
-
-  <div class="loading-indicator" *ngIf="loading">
-    Carregando...
-  </div>
-
-  <form [formGroup]="courseForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+  <h2>{{ isEditMode ? 'Editar' : 'Novo' }} Curso</h2>
+  <form [formGroup]="courseForm" (ngSubmit)="onSubmit()">
+    <div *ngIf="error" class="course-form-error-modern">
+      <pre>{{ error }}</pre>
+    </div>
     <div class="form-group">
-      <label for="name">Nome do Curso *</label>
-      <input
-        type="text"
-        id="name"
-        formControlName="name"
-        class="form-control"
-        [class.is-invalid]="nameControl?.invalid && nameControl?.touched"
-      >
-      <div class="error-message" *ngIf="nameControl?.invalid && nameControl?.touched">
-        <span *ngIf="nameControl?.errors?.['required']">Nome do curso é obrigatório.</span>
+      <label for="name">Nome do Curso <span style="color:#d32f2f">*</span></label>
+      <input type="text" id="name" formControlName="name">
+      <div class="course-form-error" *ngIf="courseForm.get('name')?.touched && courseForm.get('name')?.invalid">
+        <span *ngIf="courseForm.get('name')?.errors?.['required']" class="required-error">Campo obrigatório.</span>
       </div>
     </div>
-
     <div class="form-group">
-      <label for="code">Código do Curso *</label>
-      <input
-        type="text"
-        id="code"
-        formControlName="code"
-        class="form-control"
-        [class.is-invalid]="codeControl?.invalid && codeControl?.touched"
-      >
-      <div class="error-message" *ngIf="codeControl?.invalid && codeControl?.touched">
-        <span *ngIf="codeControl?.errors?.['required']">Código do curso é obrigatório.</span>
+      <label for="code">Código do Curso <span style="color:#d32f2f">*</span></label>
+      <input type="text" id="code" formControlName="code">
+      <div class="course-form-error" *ngIf="courseForm.get('code')?.touched && courseForm.get('code')?.invalid">
+        <span *ngIf="courseForm.get('code')?.errors?.['required']" class="required-error">Campo obrigatório.</span>
       </div>
     </div>
-
     <div class="form-group">
       <label for="description">Descrição</label>
-      <textarea
-        id="description"
-        formControlName="description"
-        class="form-control"
-        rows="4"
-      ></textarea>
+      <textarea id="description" formControlName="description" rows="4"></textarea>
+      <div class="course-form-error" *ngIf="courseForm.get('description')?.touched && courseForm.get('description')?.invalid">
+        <span *ngIf="courseForm.get('description')?.errors?.['maxlength']" class="required-error">Máximo de caracteres excedido.</span>
+      </div>
     </div>
-
-    <div class="form-actions">
+    <div class="course-form-actions">
       <button type="button" class="btn-secondary" (click)="navigateBack()">Cancelar</button>
       <button type="submit" class="btn-primary" [disabled]="courseForm.invalid">Salvar</button>
     </div>

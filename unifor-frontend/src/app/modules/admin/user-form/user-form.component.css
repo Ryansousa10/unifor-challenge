@@ -149,6 +149,15 @@
   min-height: 32px;
   min-width: 0;
   overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.user-form-error-modern pre {
+  margin: 0;
+  font-family: inherit;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .error-icon {

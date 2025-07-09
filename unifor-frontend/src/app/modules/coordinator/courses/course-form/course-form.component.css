@@ -1,141 +1,221 @@
 .course-form-container {
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.course-form-header {
+  max-width: 440px;
+  margin: 48px auto;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.13);
+  padding: 36px 30px 28px 30px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+  flex-direction: column;
+  gap: 22px;
 }
 
-.course-form-header h2 {
-  margin: 0;
-  color: #333;
-}
-
-.btn-secondary {
-  background-color: #6c757d;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.3s;
-}
-
-.btn-secondary:hover {
-  background-color: #5a6268;
-}
-
-.btn-primary {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.3s;
-}
-
-.btn-primary:hover {
-  background-color: #0069d9;
-}
-
-.btn-primary:disabled {
-  background-color: #b3d7ff;
-  cursor: not-allowed;
-}
-
-.alert {
-  padding: 12px;
-  border-radius: 4px;
-  margin-bottom: 20px;
-}
-
-.alert-error {
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
-}
-
-.alert-success {
-  background-color: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
-}
-
-.loading-indicator {
+.course-form-header,
+.course-form-container h2 {
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: #003366;
+  margin-bottom: 12px;
   text-align: center;
-  padding: 20px;
-  color: #666;
+  letter-spacing: -1px;
 }
 
+.course-form-group,
 .form-group {
-  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 18px;
 }
 
+.course-form-group label,
 .form-group label {
-  display: block;
-  margin-bottom: 8px;
   font-weight: 500;
-  color: #333;
+  color: #003366;
+  margin-bottom: 2px;
+  font-size: 1.01rem;
 }
 
-.form-control {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
-  font-size: 16px;
-  transition: border-color 0.3s;
+.course-form-group input,
+.course-form-group select,
+.course-form-group textarea,
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 11px 13px;
+  border: 1.5px solid #cfd8dc;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #f7fafc;
+  transition: border 0.2s, box-shadow 0.2s;
 }
 
-.form-control:focus {
-  border-color: #80bdff;
+.course-form-group input:focus,
+.course-form-group select:focus,
+.course-form-group textarea:focus,
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #0055a5;
   outline: none;
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  box-shadow: 0 0 0 2px #e3f2fd;
 }
 
-.form-control.is-invalid {
-  border-color: #dc3545;
-}
-
-.error-message {
-  color: #dc3545;
-  font-size: 0.875rem;
-  margin-top: 5px;
-}
-
-textarea.form-control {
-  resize: vertical;
-  min-height: 100px;
-}
-
+.course-form-actions,
 .form-actions {
   display: flex;
+  gap: 14px;
   justify-content: flex-end;
-  gap: 10px;
-  margin-top: 30px;
+  margin-top: 16px;
 }
 
-/* Responsividade */
-@media (max-width: 768px) {
-  .course-form-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+.course-form-btn,
+.btn-primary,
+.btn-secondary {
+  padding: 11px 30px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1.08rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, box-shadow 0.18s, color 0.18s;
+  box-shadow: 0 2px 8px rgba(0, 51, 102, 0.08);
+}
+
+.btn-primary,
+.course-form-btn:not(.cancel) {
+  background: #003366;
+  color: #fff;
+}
+
+.btn-primary:hover,
+.course-form-btn:not(.cancel):hover {
+  background: #0055a5;
+}
+
+.btn-secondary,
+.course-form-btn.cancel {
+  background: #e0e0e0;
+  color: #003366;
+}
+
+.btn-secondary:hover,
+.course-form-btn.cancel:hover {
+  background: #bdbdbd;
+}
+
+.course-form-error-modern {
+  display: block;
+  background: #ffeaea;
+  color: #d32f2f;
+  border: 1.5px solid #ffbdbd;
+  border-radius: 8px;
+  padding: 12px 18px;
+  font-size: 1.08rem;
+  font-weight: 500;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 8px rgba(211, 47, 47, 0.07);
+  animation: fadeInDown 0.5s;
+  word-break: break-word;
+  white-space: pre-line;
+  max-width: 100%;
+  min-width: 0;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.course-form-error-modern pre {
+  margin: 0;
+  font-family: inherit;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.course-form-error {
+  color: #d32f2f;
+  font-size: 0.98rem;
+  margin-top: 2px;
+  margin-bottom: 0;
+  font-weight: 500;
+}
+
+.error-icon {
+  vertical-align: middle;
+  font-size: 1.5em;
+  margin-right: 8px;
+  display: inline-block;
+}
+
+.course-form-error-modern span {
+  display: inline;
+  vertical-align: middle;
+  word-break: break-word;
+  white-space: pre-line;
+  min-width: 0;
+}
+
+.course-form-group textarea,
+.form-group textarea {
+  padding: 11px 13px;
+  border: 1.5px solid #cfd8dc;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #f7fafc;
+  transition: border 0.2s, box-shadow 0.2s;
+  resize: vertical;
+  min-height: 90px;
+  max-height: 220px;
+}
+
+.course-form-group textarea:focus,
+.form-group textarea:focus {
+  border-color: #0055a5;
+  outline: none;
+  box-shadow: 0 0 0 2px #e3f2fd;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  .course-form-container {
+    max-width: 99vw;
+    padding: 18px 4vw 16px 4vw;
   }
 
+  .course-form-header,
+  .course-form-container h2 {
+    font-size: 1.3rem;
+  }
+
+  .course-form-actions,
   .form-actions {
     flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
   }
 
-  .form-actions button {
-    width: 100%;
+  .course-form-group,
+  .form-group {
+    margin-bottom: 12px;
   }
+}
+
+.course-form-container,
+.course-form-container * {
+  user-select: text !important;
+}
+
+.required-error {
+  color: #d32f2f;
+  font-weight: 500;
 }
