@@ -53,10 +53,15 @@ export class UserFormComponent implements OnInit, OnDestroy {
     initForm(): void {
         this.userForm = this.fb.group({
             username: ['', [Validators.required, Validators.minLength(6)]],
-            password: ['', [Validators.required, Validators.minLength(6)]],
+            password: [
+                '',
+                this.isEditMode
+                    ? []
+                    : [Validators.required, Validators.minLength(6)] // Exige na criação
+            ],
             firstName: ['', [Validators.required, Validators.minLength(2), Validators.pattern('^[A-Za-zÀ-ÿ\s]+$')]],
             lastName: ['', [Validators.required, Validators.minLength(2), Validators.pattern('^[A-Za-zÀ-ÿ\s]+$')]],
-            email: ['', [Validators.required, Validators.email, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')]],
+            email: ['', [Validators.required, Validators.email, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]],
         });
     }
 
@@ -120,12 +125,13 @@ export class UserFormComponent implements OnInit, OnDestroy {
         this.userForm.get('email')?.setErrors(null);
         this.userForm.get('username')?.setErrors(null);
 
+        this.userForm.markAllAsTouched();
+
         if (this.hasRoleError()) {
             this.setErrorMessage('role');
             return;
         }
         if (this.userForm.invalid) {
-            this.userForm.markAllAsTouched();
             this.setErrorMessage();
             return;
         }
@@ -187,7 +193,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
         } else if ((typeof err === 'string' && err.includes('409')) || (err.error && typeof err.error === 'string' && (err.error.includes('409') || err.error.includes('Conflict')))) {
             this.errorMessage = 'Usuário ou e-mail já cadastrado.';
         } else {
-            this.errorMessage = 'Erro ao salvar usuário: ' + (err.error?.message || err.message || JSON.stringify(err));
+            this.errorMessage = 'Erro ao salvar usuário, por favor verifique se preencheu todos os campos corretamente ';
         }
     }
 
