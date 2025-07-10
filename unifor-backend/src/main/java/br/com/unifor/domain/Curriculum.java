@@ -48,4 +48,13 @@ public class Curriculum extends PanacheEntityBase {
     @ManyToOne
     @JoinColumn(name = "semester_id", nullable = false)
     private Semester semester;
+
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Column(name = "description", nullable = false)
+    private String description;
+
+    @Column(name = "active", nullable = false)
+    private Boolean active;
 }

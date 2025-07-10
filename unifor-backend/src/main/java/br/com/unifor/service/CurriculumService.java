@@ -3,8 +3,10 @@ package br.com.unifor.service;
 import br.com.unifor.domain.Curriculum;
 import br.com.unifor.domain.Course;
 import br.com.unifor.domain.Semester;
+import br.com.unifor.domain.CurricDisc;
 import br.com.unifor.dto.CurriculumRequestDTO;
 import br.com.unifor.dto.CurriculumResponseDTO;
+import br.com.unifor.dto.CurricDiscResponseDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
@@ -58,7 +60,20 @@ public class CurriculumService {
         Curriculum curriculum = new Curriculum();
         curriculum.setCourse(course);
         curriculum.setSemester(semester);
+        curriculum.setName(dto.getName());
+        curriculum.setDescription(dto.getDescription());
+        curriculum.setActive(dto.getActive());
         curriculum.persist();
+        // Salva as disciplinas vinculadas
+        if (dto.getDisciplines() != null) {
+            for (var discDto : dto.getDisciplines()) {
+                CurricDisc curricDisc = new CurricDisc();
+                curricDisc.setCurriculumId(curriculum.getId());
+                curricDisc.setDisciplineId(discDto.getDisciplineId());
+                curricDisc.setOrdering(discDto.getOrdering());
+                curricDisc.persist();
+            }
+        }
         return toResponseDTO(curriculum);
     }
 
@@ -98,6 +113,19 @@ public class CurriculumService {
         dto.setId(curriculum.getId());
         dto.setCourseId(curriculum.getCourse() != null ? curriculum.getCourse().getId() : null);
         dto.setSemesterId(curriculum.getSemester() != null ? curriculum.getSemester().getId() : null);
+        dto.setName(curriculum.getName());
+        dto.setDescription(curriculum.getDescription());
+        dto.setActive(curriculum.getActive());
+        // Buscar as disciplinas vinculadas
+        List<CurricDisc> curricDiscs = CurricDisc.find("curriculumId", curriculum.getId()).list();
+        List<CurricDiscResponseDTO> discDTOs = curricDiscs.stream().map(cd -> {
+            CurricDiscResponseDTO d = new CurricDiscResponseDTO();
+            d.setCurriculumId(cd.getCurriculumId());
+            d.setDisciplineId(cd.getDisciplineId());
+            d.setOrdering(cd.getOrdering());
+            return d;
+        }).collect(Collectors.toList());
+        dto.setDisciplines(discDTOs);
         return dto;
     }
 }
