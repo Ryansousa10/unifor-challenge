@@ -162,6 +162,14 @@
   color: #888;
   font-size: 1.1rem;
   margin-top: 32px;
+  padding: 30px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.empty-state p {
+  margin-bottom: 15px;
+  color: #666;
 }
 
 @media (max-width: 900px) {

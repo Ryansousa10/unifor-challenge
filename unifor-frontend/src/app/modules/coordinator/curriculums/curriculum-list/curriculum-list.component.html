@@ -50,6 +50,7 @@
     </table>
   </div>
   <div class="empty-state" *ngIf="curriculums.length === 0 && !error">
-    Nenhuma matriz curricular encontrada.
+    <p>Nenhuma matriz curricular encontrada.</p>
+    <button class="btn-primary" routerLink="/coordinator/curriculums/new">Adicionar Matriz</button>
   </div>
 </div>

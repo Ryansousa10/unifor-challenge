@@ -39,6 +39,7 @@
   </div>
 
   <div class="empty-state" *ngIf="!loading && semesters.length === 0">
-    Nenhum semestre cadastrado.
+    <p>Nenhum semestre cadastrado.</p>
+    <button class="btn-primary" (click)="navigateToNewSemester()">Adicionar Semestre</button>
   </div>
 </div>
