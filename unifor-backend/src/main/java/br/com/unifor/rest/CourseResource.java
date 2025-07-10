@@ -14,7 +14,6 @@ import jakarta.inject.Inject;
 @Path("/course")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@RolesAllowed({"COORDENADOR", "ADMIN"})
 public class CourseResource {
 
     // Recurso REST para gerenciamento de cursos da instituição.
@@ -35,18 +34,21 @@ public class CourseResource {
     CourseService courseService;
 
     @GET
+    @RolesAllowed({"COORDENADOR", "ADMIN", "PROFESSOR", "ALUNO"})
     public List<CourseResponseDTO> list() {
         return courseService.listCourses();
     }
 
     @GET
     @Path("{id}")
+    @RolesAllowed({"COORDENADOR", "ADMIN", "PROFESSOR", "ALUNO"})
     public Response get(@PathParam("id") UUID id) {
         CourseResponseDTO dto = courseService.getCourse(id);
         return Response.ok(dto).build();
     }
 
     @POST
+    @RolesAllowed({"COORDENADOR", "ADMIN"})
     public Response create(CourseRequestDTO dto, @Context UriInfo uriInfo) {
         CourseResponseDTO created = courseService.createCourse(dto);
         URI uri = uriInfo.getAbsolutePathBuilder().path(created.getId().toString()).build();
@@ -55,6 +57,7 @@ public class CourseResource {
 
     @PUT
     @Path("{id}")
+    @RolesAllowed({"COORDENADOR", "ADMIN"})
     public Response update(@PathParam("id") UUID id, CourseRequestDTO dto) {
         CourseResponseDTO updated = courseService.updateCourse(id, dto);
         return Response.ok(updated).build();

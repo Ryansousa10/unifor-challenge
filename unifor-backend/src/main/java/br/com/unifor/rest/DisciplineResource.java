@@ -16,7 +16,6 @@ import jakarta.inject.Inject;
 @Path("/discipline")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@RolesAllowed({"COORDENADOR", "ADMIN"})
 public class DisciplineResource {
 
     // Recurso REST para gerenciamento de disciplinas.
@@ -37,18 +36,21 @@ public class DisciplineResource {
     DisciplineService disciplineService;
 
     @GET
+    @RolesAllowed({"COORDENADOR", "ADMIN", "PROFESSOR", "ALUNO"})
     public List<DisciplineResponseDTO> list() {
         return disciplineService.listDisciplines();
     }
 
     @GET
     @Path("{id}")
+    @RolesAllowed({"COORDENADOR", "ADMIN", "PROFESSOR", "ALUNO"})
     public Response get(@PathParam("id") UUID id) {
         DisciplineResponseDTO dto = disciplineService.getDiscipline(id);
         return Response.ok(dto).build();
     }
 
     @POST
+    @RolesAllowed({"COORDENADOR", "ADMIN"})
     public Response create(DisciplineRequestDTO dto, @Context UriInfo uriInfo) {
         DisciplineResponseDTO created = disciplineService.createDiscipline(dto);
         URI uri = uriInfo.getAbsolutePathBuilder().path(created.getId().toString()).build();
@@ -57,6 +59,7 @@ public class DisciplineResource {
 
     @PUT
     @Path("{id}")
+    @RolesAllowed({"COORDENADOR", "ADMIN"})
     public Response update(@PathParam("id") UUID id, DisciplineRequestDTO dto) {
         DisciplineResponseDTO updated = disciplineService.updateDiscipline(id, dto);
         return Response.ok(updated).build();

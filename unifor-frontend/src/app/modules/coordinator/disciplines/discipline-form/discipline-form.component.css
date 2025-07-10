@@ -1,0 +1,226 @@
+.discipline-form-container {
+  max-width: 440px;
+  margin: 48px auto;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.13);
+  padding: 36px 30px 28px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.discipline-form-header,
+.discipline-form-container h2 {
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: #003366;
+  margin-bottom: 12px;
+  text-align: center;
+  letter-spacing: -1px;
+}
+
+.discipline-form-group,
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 18px;
+}
+
+.discipline-form-group label,
+.form-group label {
+  font-weight: 500;
+  color: #003366;
+  margin-bottom: 2px;
+  font-size: 1.01rem;
+}
+
+.discipline-form-group input,
+.discipline-form-group select,
+.discipline-form-group textarea,
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 11px 13px;
+  border: 1.5px solid #cfd8dc;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #f7fafc;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.discipline-form-group input:focus,
+.discipline-form-group select:focus,
+.discipline-form-group textarea:focus,
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #0055a5;
+  outline: none;
+  box-shadow: 0 0 0 2px #e3f2fd;
+}
+
+.discipline-form-actions,
+.form-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.discipline-form-btn,
+.btn-primary,
+.btn-secondary {
+  padding: 11px 30px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1.08rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, box-shadow 0.18s, color 0.18s;
+  box-shadow: 0 2px 8px rgba(0, 51, 102, 0.08);
+}
+
+.btn-primary,
+.discipline-form-btn:not(.cancel) {
+  background: #003366;
+  color: #fff;
+}
+
+.btn-primary:hover,
+.discipline-form-btn:not(.cancel):hover {
+  background: #0055a5;
+}
+
+.btn-secondary,
+.discipline-form-btn.cancel {
+  background: #e0e0e0;
+  color: #003366;
+}
+
+.btn-secondary:hover,
+.discipline-form-btn.cancel:hover {
+  background: #bdbdbd;
+}
+
+.discipline-form-error-modern {
+  display: block;
+  background: #ffeaea;
+  color: #d32f2f;
+  border: 1.5px solid #ffbdbd;
+  border-radius: 8px;
+  padding: 12px 18px;
+  font-size: 1.08rem;
+  font-weight: 500;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 8px rgba(211, 47, 47, 0.07);
+  animation: fadeInDown 0.5s;
+  word-break: break-word;
+  white-space: pre-line;
+  max-width: 100%;
+  min-height: 32px;
+  min-width: 0;
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.discipline-form-error-modern pre {
+  margin: 0;
+  font-family: inherit;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.discipline-form-error {
+  color: #d32f2f;
+  font-size: 0.98rem;
+  margin-top: 2px;
+  margin-bottom: 0;
+  font-weight: 500;
+}
+
+.discipline-form-error-modern span {
+  display: inline;
+  vertical-align: middle;
+  word-break: break-word;
+  white-space: pre-line;
+  min-width: 0;
+}
+
+.discipline-form-success-modern {
+  background: #e6f9ec;
+  color: #218838;
+  border: 1px solid #b7ebc6;
+  border-radius: 6px;
+  padding: 12px 18px;
+  margin-bottom: 18px;
+  font-size: 1.1em;
+  font-weight: 500;
+  box-shadow: 0 2px 8px 0 rgba(33, 136, 56, 0.07);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.discipline-form-success-modern pre {
+  background: none;
+  color: inherit;
+  margin: 0;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.discipline-form-success-modern::before {
+  content: '\2714'; /* checkmark */
+  color: #218838;
+  font-size: 1.5em;
+  margin-right: 8px;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  .discipline-form-container {
+    max-width: 99vw;
+    padding: 18px 4vw 16px 4vw;
+  }
+
+  .discipline-form-header,
+  .discipline-form-container h2 {
+    font-size: 1.3rem;
+  }
+
+  .discipline-form-actions,
+  .form-actions {
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+  }
+
+  .discipline-form-group,
+  .form-group {
+    margin-bottom: 12px;
+  }
+}
+
+.discipline-form-container,
+.discipline-form-container * {
+  user-select: text !important;
+}
+
+.required-error {
+  color: #d32f2f;
+  font-weight: 500;
+}

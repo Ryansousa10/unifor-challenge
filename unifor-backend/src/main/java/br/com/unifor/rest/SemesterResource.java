@@ -14,7 +14,6 @@ import jakarta.inject.Inject;
 @Path("/semester")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@RolesAllowed({"COORDENADOR", "ADMIN"})
 public class SemesterResource {
 
     // Recurso REST para gerenciamento de semestres letivos.
@@ -35,18 +34,21 @@ public class SemesterResource {
     SemesterService semesterService;
 
     @GET
+    @RolesAllowed({"COORDENADOR", "ADMIN", "PROFESSOR", "ALUNO"})
     public List<SemesterResponseDTO> list() {
         return semesterService.listSemesters();
     }
 
     @GET
     @Path("{id}")
+    @RolesAllowed({"COORDENADOR", "ADMIN", "PROFESSOR", "ALUNO"})
     public Response get(@PathParam("id") UUID id) {
         SemesterResponseDTO dto = semesterService.getSemester(id);
         return Response.ok(dto).build();
     }
 
     @POST
+    @RolesAllowed({"COORDENADOR", "ADMIN"})
     public Response create(SemesterRequestDTO dto, @Context UriInfo uriInfo) {
         SemesterResponseDTO created = semesterService.createSemester(dto);
         URI uri = uriInfo.getAbsolutePathBuilder().path(created.getId().toString()).build();
@@ -55,6 +57,7 @@ public class SemesterResource {
 
     @PUT
     @Path("{id}")
+    @RolesAllowed({"COORDENADOR", "ADMIN"})
     public Response update(@PathParam("id") UUID id, SemesterRequestDTO dto) {
         SemesterResponseDTO updated = semesterService.updateSemester(id, dto);
         return Response.ok(updated).build();

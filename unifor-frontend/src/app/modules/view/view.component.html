@@ -1,0 +1,50 @@
+<div class="curriculum-list-container">
+  <h2 class="curriculum-list-title"><i class="fas fa-book-open"></i> Matrizes Curriculares</h2>
+
+  <div class="curriculum-list-search-bar">
+    <input type="text" [(ngModel)]="search" (input)="onSearch()" placeholder="Buscar por nome, curso ou semestre..." />
+    <i class="fas fa-search"></i>
+  </div>
+
+  <div *ngIf="loading" class="curriculum-list-loading">
+    <i class="fas fa-circle-notch fa-spin"></i> Carregando matrizes curriculares...
+  </div>
+  <div *ngIf="error" class="curriculum-list-error">{{ error }}</div>
+
+  <div *ngIf="!loading && filteredCurriculums.length === 0" class="curriculum-list-empty">
+    <i class="fas fa-info-circle"></i> Nenhuma matriz encontrada.
+  </div>
+
+  <div class="curriculum-list-table-wrapper" *ngIf="!loading && filteredCurriculums.length > 0">
+    <table class="curriculum-list-table">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Curso</th>
+          <th>Semestre</th>
+          <th>Status</th>
+          <th>Disciplinas</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let curriculum of filteredCurriculums">
+          <td>{{ curriculum.name }}</td>
+          <td>{{ curriculum.courseName || '-' }}</td>
+          <td>{{ curriculum.semesterName || '-' }}</td>
+          <td>
+            <span [ngClass]="{'text-success': curriculum.active, 'text-danger': !curriculum.active}">
+              {{ curriculum.active ? 'Ativa' : 'Inativa' }}
+            </span>
+          </td>
+          <td>{{ curriculum.disciplineCount }}</td>
+          <td>
+            <button class="btn btn-secondary btn-sm" [routerLink]="['/coordinator/curriculums', curriculum.id]" title="Visualizar">
+              <i class="fa fa-eye"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

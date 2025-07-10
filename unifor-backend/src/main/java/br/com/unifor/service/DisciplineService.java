@@ -41,11 +41,23 @@ public class DisciplineService {
 
     @Transactional
     public DisciplineResponseDTO createDiscipline(DisciplineRequestDTO dto) {
+        // Validação de duplicidade de código da disciplina
+        if (Discipline.find("code", dto.getCode()).firstResult() != null) {
+            throw new br.com.unifor.exception.DuplicateResourceException("Código de disciplina já cadastrado: " + dto.getCode());
+        }
+        // Validação de payload: nome e créditos obrigatórios
+        if (dto.getName() == null || dto.getName().isBlank()) {
+            throw new br.com.unifor.exception.InvalidPayloadException("Nome da disciplina é obrigatório");
+        }
+        if (dto.getCredits() == null || dto.getCredits() <= 0) {
+            throw new br.com.unifor.exception.InvalidPayloadException("Créditos da disciplina devem ser positivos");
+        }
         Discipline discipline = new Discipline();
         discipline.setCode(dto.getCode());
         discipline.setName(dto.getName());
         discipline.setCredits(dto.getCredits());
         discipline.setDescription(dto.getDescription());
+        discipline.setWorkload(dto.getWorkload());
         discipline.persist();
         return toResponseDTO(discipline);
     }
@@ -56,10 +68,22 @@ public class DisciplineService {
         if (existing == null) {
             throw new NotFoundException("Discipline not found: " + id);
         }
+        // Validação de duplicidade de código (exceto a própria disciplina)
+        if (Discipline.find("code = ?1 and id <> ?2", dto.getCode(), id).firstResult() != null) {
+            throw new br.com.unifor.exception.DuplicateResourceException("Código de disciplina já cadastrado: " + dto.getCode());
+        }
+        // Validação de payload: nome e créditos obrigatórios
+        if (dto.getName() == null || dto.getName().isBlank()) {
+            throw new br.com.unifor.exception.InvalidPayloadException("Nome da disciplina é obrigatório");
+        }
+        if (dto.getCredits() == null || dto.getCredits() <= 0) {
+            throw new br.com.unifor.exception.InvalidPayloadException("Créditos da disciplina devem ser positivos");
+        }
         existing.setCode(dto.getCode());
         existing.setName(dto.getName());
         existing.setCredits(dto.getCredits());
         existing.setDescription(dto.getDescription());
+        existing.setWorkload(dto.getWorkload());
         return toResponseDTO(existing);
     }
 
@@ -77,6 +101,7 @@ public class DisciplineService {
         dto.setCode(discipline.getCode());
         dto.setName(discipline.getName());
         dto.setCredits(discipline.getCredits());
+        dto.setWorkload(discipline.getWorkload());
         dto.setDescription(discipline.getDescription());
         return dto;
     }

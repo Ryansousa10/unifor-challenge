@@ -18,6 +18,8 @@ public class DisciplineRequestDTO {
     @NotNull
     private Integer credits;
 
+    @NotNull
+    private Integer workload;
+
     private String description;
 }
-

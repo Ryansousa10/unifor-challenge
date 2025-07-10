@@ -1,0 +1,36 @@
+<div class="course-form-container">
+  <h2>{{ isEditMode ? 'Editar' : 'Novo' }} Curso</h2>
+  <form [formGroup]="courseForm" (ngSubmit)="onSubmit()">
+    <div *ngIf="error" class="course-form-error-modern">
+      <pre>{{ error }}</pre>
+    </div>
+    <div *ngIf="success" class="course-form-success-modern">
+      <pre>{{ success }}</pre>
+    </div>
+    <div class="form-group">
+      <label for="name">Nome do Curso <span style="color:#d32f2f">*</span></label>
+      <input type="text" id="name" formControlName="name">
+      <div class="course-form-error" *ngIf="courseForm.get('name')?.touched && courseForm.get('name')?.invalid">
+        <span *ngIf="courseForm.get('name')?.errors?.['required']" class="required-error">Campo obrigatório.</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="code">Código do Curso <span style="color:#d32f2f">*</span></label>
+      <input type="text" id="code" formControlName="code">
+      <div class="course-form-error" *ngIf="courseForm.get('code')?.touched && courseForm.get('code')?.invalid">
+        <span *ngIf="courseForm.get('code')?.errors?.['required']" class="required-error">Campo obrigatório.</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="description">Descrição</label>
+      <textarea id="description" formControlName="description" rows="4"></textarea>
+      <div class="course-form-error" *ngIf="courseForm.get('description')?.touched && courseForm.get('description')?.invalid">
+        <span *ngIf="courseForm.get('description')?.errors?.['maxlength']" class="required-error">Máximo de caracteres excedido.</span>
+      </div>
+    </div>
+    <div class="course-form-actions">
+      <button type="button" class="btn-secondary" (click)="navigateBack()">Cancelar</button>
+      <button type="submit" class="btn-primary" [disabled]="courseForm.invalid">Salvar</button>
+    </div>
+  </form>
+</div>

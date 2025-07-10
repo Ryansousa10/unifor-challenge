@@ -10,6 +10,6 @@ public class DisciplineResponseDTO {
     private String code;
     private String name;
     private Integer credits;
+    private Integer workload;
     private String description;
 }
-

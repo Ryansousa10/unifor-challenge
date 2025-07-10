@@ -1,0 +1,93 @@
+<div class="container">
+  <header class="header">
+    <div class="logo-container" style="cursor:pointer" (click)="goToDashboard()">
+      <i class="fas fa-graduation-cap logo-icon"></i>
+      <h1>{{ title }}</h1>
+    </div>
+
+    <nav class="main-nav" *ngIf="userProfile">
+      <a routerLink="/dashboard" routerLinkActive="active">
+        <i class="fas fa-tachometer-alt"></i> Dashboard
+      </a>
+      <a routerLink="/admin" routerLinkActive="active" *ngIf="isAdmin">
+        <i class="fas fa-user-shield"></i> Administração
+      </a>
+      <a routerLink="/coordinator" routerLinkActive="active" *ngIf="isCoordenador">
+        <i class="fas fa-user-tie"></i> Coordenação
+      </a>
+      <a routerLink="/view/curriculums" routerLinkActive="active">
+        <i class="fas fa-book"></i> Currículos
+      </a>
+    </nav>
+
+    <div class="user-info" *ngIf="userProfile">
+      <div class="user-dropdown">
+        <div class="user-trigger" (click)="toggleDropdown()">
+          <i class="fas fa-user-circle"></i>
+          <span>{{ username }}</span>
+          <i class="fas" [ngClass]="{'fa-chevron-down': !dropdownOpen, 'fa-chevron-up': dropdownOpen}"></i>
+        </div>
+        <div class="dropdown-content" [ngClass]="{'show': dropdownOpen}">
+          <div class="user-roles">
+            <span *ngFor="let role of filteredRoles" class="role-badge">
+              <i class="fas" [ngClass]="{
+                'fa-user-shield': role === 'ADMIN',
+                'fa-user-tie': role === 'COORDENADOR',
+                'fa-chalkboard-teacher': role === 'PROFESSOR',
+                'fa-user-graduate': role === 'ALUNO'
+              }"></i> {{ role }}
+            </span>
+          </div>
+          <button (click)="logout()" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Sair
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="burger-menu" [ngClass]="{'open': mobileMenuOpen}" (click)="toggleMobileMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </header>
+
+  <!-- Painel mobile -->
+  <div class="mobile-panel" [ngClass]="{'open': mobileMenuOpen}" (click)="$event.stopPropagation()">
+    <nav class="main-nav" *ngIf="userProfile">
+      <a routerLink="/dashboard" routerLinkActive="active" (click)="toggleMobileMenu()">
+        <i class="fas fa-tachometer-alt"></i> Dashboard
+      </a>
+      <a routerLink="/admin" routerLinkActive="active" *ngIf="isAdmin" (click)="toggleMobileMenu()">
+        <i class="fas fa-user-shield"></i> Administração
+      </a>
+      <a routerLink="/coordinator" routerLinkActive="active" *ngIf="isCoordenador" (click)="toggleMobileMenu()">
+        <i class="fas fa-user-tie"></i> Coordenação
+      </a>
+      <a routerLink="/professor" routerLinkActive="active" *ngIf="isProfessor" (click)="toggleMobileMenu()">
+        <i class="fas fa-chalkboard-teacher"></i> Professor
+      </a>
+      <a routerLink="/student" routerLinkActive="active" *ngIf="hasRole('ALUNO')" (click)="toggleMobileMenu()">
+        <i class="fas fa-user-graduate"></i> Aluno
+      </a>
+      <a routerLink="/view/curriculums" routerLinkActive="active" (click)="toggleMobileMenu()">
+        <i class="fas fa-book"></i> Currículos
+      </a>
+    </nav>
+    <div class="mobile-logout-container" *ngIf="userProfile">
+      <button (click)="logout()" class="logout-btn mobile-logout-btn">
+        <i class="fas fa-sign-out-alt"></i> Sair
+      </button>
+    </div>
+  </div>
+  <!-- Fim painel mobile -->
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+
+    <div class="loading" *ngIf="!userProfile">
+      <div class="spinner"></div>
+      <p><i class="fas fa-circle-notch fa-spin"></i> Carregando informações do usuário...</p>
+    </div>
+  </main>
+</div>

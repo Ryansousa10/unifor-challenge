@@ -1,0 +1,57 @@
+<div class="user-list-container">
+  <div class="user-list-header">
+    <h2>Gerenciamento de Usuários</h2>
+    <button class="btn-primary" (click)="navigateToNewUser()">Novo Usuário</button>
+  </div>
+
+  <div class="alert alert-error" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <div class="loading-indicator" *ngIf="loading">
+    Carregando usuários...
+  </div>
+
+  <div class="table-responsive" *ngIf="!loading && users.length > 0">
+    <table class="user-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+          <th>Nome Completo</th>
+          <th>Email</th>
+          <th>Perfis</th>
+          <th>Data de Criação</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.id }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.firstName }} {{ user.lastName }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            <span *ngFor="let role of user.roles; let last = last">
+              {{ role }}{{ !last ? ', ' : '' }}
+            </span>
+          </td>
+          <td>{{ user.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td class="actions-column">
+            <button class="btn-edit" (click)="editUser(user.id!)">
+              <i class="fa fa-edit"></i>
+            </button>
+            <button class="btn-delete" (click)="deleteUser(user.id!)">
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && users.length === 0">
+    <p>Nenhum usuário encontrado.</p>
+    <button class="btn-primary" (click)="navigateToNewUser()">Adicionar Usuário</button>
+  </div>
+</div>

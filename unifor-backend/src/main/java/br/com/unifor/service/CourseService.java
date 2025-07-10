@@ -41,6 +41,14 @@ public class CourseService {
 
     @Transactional
     public CourseResponseDTO createCourse(CourseRequestDTO dto) {
+        // Validação de duplicidade de código do curso
+        if (Course.find("code", dto.getCode()).firstResult() != null) {
+            throw new br.com.unifor.exception.DuplicateResourceException("Código de curso já cadastrado: " + dto.getCode());
+        }
+        // Validação de payload: nome obrigatório
+        if (dto.getName() == null || dto.getName().isBlank()) {
+            throw new br.com.unifor.exception.InvalidPayloadException("Nome do curso é obrigatório");
+        }
         Course course = new Course();
         course.setCode(dto.getCode());
         course.setName(dto.getName());
@@ -54,6 +62,14 @@ public class CourseService {
         Course existing = Course.findById(id);
         if (existing == null) {
             throw new NotFoundException("Course not found: " + id);
+        }
+        // Validação de duplicidade de código (exceto o próprio curso)
+        if (Course.find("code = ?1 and id <> ?2", dto.getCode(), id).firstResult() != null) {
+            throw new br.com.unifor.exception.DuplicateResourceException("Código de curso já cadastrado: " + dto.getCode());
+        }
+        // Validação de payload: nome obrigatório
+        if (dto.getName() == null || dto.getName().isBlank()) {
+            throw new br.com.unifor.exception.InvalidPayloadException("Nome do curso é obrigatório");
         }
         existing.setCode(dto.getCode());
         existing.setName(dto.getName());

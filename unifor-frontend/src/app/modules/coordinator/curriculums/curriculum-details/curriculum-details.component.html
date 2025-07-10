@@ -1,0 +1,68 @@
+<div class="curriculum-details-container">
+  <h2 class="curriculum-details-header">Visualizar Matriz Curricular</h2>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+  <div *ngIf="loading">Carregando...</div>
+  <div *ngIf="!loading && curriculum">
+    <div class="card">
+      <div class="card-body">
+        <div class="row-fields">
+          <div class="form-group">
+            <label>Nome:</label>
+            <div class="field-value">{{ curriculum.name }}</div>
+          </div>
+          <div class="form-group">
+            <label>Curso:</label>
+            <div class="field-value">{{ courseName }}</div>
+          </div>
+          <div class="form-group">
+            <label>Semestre:</label>
+            <div class="field-value">{{ semesterName }}</div>
+          </div>
+          <div class="form-group">
+            <label>Status:</label>
+            <div class="field-value">
+              <span [ngClass]="{'text-success': curriculum.active, 'text-danger': !curriculum.active}">
+                {{ curriculum.active ? 'Ativa' : 'Inativa' }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Descrição:</label>
+          <div class="field-value">{{ curriculum.description }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <div class="card-title">Disciplinas</div>
+        <div *ngIf="disciplines.length > 0" class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Ordem</th>
+                <th>Nome</th>
+                <th>Código</th>
+                <th>Carga Horária</th>
+                <th>Créditos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let d of disciplines">
+                <td>{{ d.ordering }}</td>
+                <td>{{ d.name }}</td>
+                <td>{{ d.code }}</td>
+                <td>{{ d.workload }}</td>
+                <td>{{ d.credits }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div *ngIf="disciplines.length === 0" class="text-muted empty-state">Nenhuma disciplina vinculada.</div>
+      </div>
+    </div>
+    <div class="form-group mt-4" style="text-align: right;">
+      <button type="button" class="btn btn-secondary" (click)="goBack()">Voltar</button>
+    </div>
+  </div>
+</div>

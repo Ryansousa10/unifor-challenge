@@ -1,0 +1,52 @@
+<div class="dashboard-container fade-in">
+  <div class="header">
+    <h1><i class="fas fa-university"></i> Sistema Acadêmico - Unifor</h1>
+  </div>
+
+  <div class="cards-container">
+    <!-- Card para Administrador -->
+    <div class="card" *ngIf="authService.isAdmin()" (click)="navigateToAdminPanel()">
+      <div class="card-icon">
+        <i class="fas fa-users-cog"></i>
+      </div>
+      <div class="card-content">
+        <h2>Administração</h2>
+        <p>Gerencie usuários, configurações e monitore o sistema</p>
+        <small><i class="fas fa-key"></i> Acesso completo ao sistema</small>
+      </div>
+      <div class="card-action">
+        <i class="fas fa-arrow-right"></i>
+      </div>
+    </div>
+
+    <!-- Card para Coordenador -->
+    <div class="card" *ngIf="authService.isCoordenador()" (click)="navigateToCoordinatorPanel()">
+      <div class="card-icon">
+        <i class="fas fa-clipboard-list"></i>
+      </div>
+      <div class="card-content">
+        <h2>Coordenação</h2>
+        <p>Gerencie cursos, disciplinas, semestres e matrizes curriculares</p>
+        <small><i class="fas fa-user-tie"></i> Acesso à gestão acadêmica</small>
+      </div>
+      <div class="card-action">
+        <i class="fas fa-arrow-right"></i>
+      </div>
+    </div>
+
+    <!-- Card para Visualizar Currículos (disponível para todos) -->
+    <div class="card" (click)="navigateToViewCurriculums()">
+      <div class="card-icon">
+        <i class="fas fa-book-open"></i>
+      </div>
+      <div class="card-content">
+        <h2>Visualizar Currículos</h2>
+        <p>Explore as matrizes curriculares disponíveis</p>
+        <small><i class="fas fa-users"></i> Disponível para todos os usuários</small>
+      </div>
+      <div class="card-action">
+        <i class="fas fa-arrow-right"></i>
+      </div>
+    </div>
+  </div>
+</div>

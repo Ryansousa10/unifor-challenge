@@ -1,4 +1,4 @@
-openapi: 3.0.4
+openapi: 3.1.0
 info:
   title: Sistema de Gestão Acadêmica - UNIFOR
   description: |-
@@ -46,7 +46,7 @@ info:
   version: 1.0.0
 
 servers:
-  - url: http://localhost:8080
+  - url: http://localhost:8081
     description: Servidor de Desenvolvimento
 
 tags:
@@ -613,6 +613,150 @@ paths:
           description: Semestre excluído com sucesso
         '404':
           description: Semestre não encontrado
+        '401':
+          description: Não autorizado - autenticação necessária
+        '403':
+          description: Proibido - usuário não tem permissão
+
+  /curriculum:
+    get:
+      tags:
+        - Currículos
+      summary: Listar todas as matrizes curriculares
+      description: Retorna uma lista com todas as matrizes curriculares cadastradas no sistema
+      operationId: listCurriculums
+      security:
+        - KeycloakAuth: ["COORDENADOR", "PROFESSOR", "ALUNO", "ADMIN"]
+      responses:
+        '200':
+          description: Lista de matrizes curriculares retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CurriculumResponse'
+        '401':
+          description: Não autorizado - autenticação necessária
+        '403':
+          description: Proibido - usuário não tem permissão
+    post:
+      tags:
+        - Currículos
+      summary: Criar nova matriz curricular
+      description: Cria uma nova matriz curricular no sistema
+      operationId: createCurriculum
+      security:
+        - KeycloakAuth: ["COORDENADOR", "ADMIN"]
+      requestBody:
+        description: Dados da nova matriz curricular
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CurriculumRequest'
+      responses:
+        '201':
+          description: Matriz curricular criada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurriculumResponse'
+        '400':
+          description: Dados inválidos fornecidos
+        '401':
+          description: Não autorizado - autenticação necessária
+        '403':
+          description: Proibido - usuário não tem permissão
+  /curriculum/{id}:
+    get:
+      tags:
+        - Currículos
+      summary: Buscar matriz curricular por ID
+      description: Retorna os dados de uma matriz curricular específica
+      operationId: getCurriculum
+      security:
+        - KeycloakAuth: ["COORDENADOR", "PROFESSOR", "ALUNO", "ADMIN"]
+      parameters:
+        - name: id
+          in: path
+          description: ID da matriz curricular
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Matriz curricular encontrada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurriculumResponse'
+        '404':
+          description: Matriz curricular não encontrada
+        '401':
+          description: Não autorizado - autenticação necessária
+        '403':
+          description: Proibido - usuário não tem permissão
+    put:
+      tags:
+        - Currículos
+      summary: Atualizar matriz curricular
+      description: Atualiza os dados de uma matriz curricular existente
+      operationId: updateCurriculum
+      security:
+        - KeycloakAuth: ["COORDENADOR", "ADMIN"]
+      parameters:
+        - name: id
+          in: path
+          description: ID da matriz curricular
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Novos dados da matriz curricular
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CurriculumRequest'
+      responses:
+        '200':
+          description: Matriz curricular atualizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurriculumResponse'
+        '404':
+          description: Matriz curricular não encontrada
+        '400':
+          description: Dados inválidos fornecidos
+        '401':
+          description: Não autorizado - autenticação necessária
+        '403':
+          description: Proibido - usuário não tem permissão
+    delete:
+      tags:
+        - Currículos
+      summary: Excluir matriz curricular
+      description: Remove uma matriz curricular do sistema
+      operationId: deleteCurriculum
+      security:
+        - KeycloakAuth: ["COORDENADOR", "ADMIN"]
+      parameters:
+        - name: id
+          in: path
+          description: ID da matriz curricular
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Matriz curricular excluída com sucesso
+        '404':
+          description: Matriz curricular não encontrada
         '401':
           description: Não autorizado - autenticação necessária
         '403':

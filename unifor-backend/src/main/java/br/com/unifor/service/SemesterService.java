@@ -41,6 +41,20 @@ public class SemesterService {
 
     @Transactional
     public SemesterResponseDTO createSemester(SemesterRequestDTO dto) {
+        // Validação de duplicidade de nome do semestre
+        if (Semester.find("name", dto.getName()).firstResult() != null) {
+            throw new br.com.unifor.exception.DuplicateResourceException("Nome de semestre já cadastrado: " + dto.getName());
+        }
+        // Validação de payload: nome e datas obrigatórias
+        if (dto.getName() == null || dto.getName().isBlank()) {
+            throw new br.com.unifor.exception.InvalidPayloadException("Nome do semestre é obrigatório");
+        }
+        if (dto.getStartDate() == null || dto.getEndDate() == null) {
+            throw new br.com.unifor.exception.InvalidPayloadException("Datas de início e fim são obrigatórias");
+        }
+        if (dto.getStartDate().isAfter(dto.getEndDate())) {
+            throw new br.com.unifor.exception.InvalidPayloadException("Data de início deve ser anterior à data de fim");
+        }
         Semester semester = new Semester();
         semester.setName(dto.getName());
         semester.setStartDate(dto.getStartDate());
@@ -54,6 +68,20 @@ public class SemesterService {
         Semester existing = Semester.findById(id);
         if (existing == null) {
             throw new NotFoundException("Semester not found: " + id);
+        }
+        // Validação de duplicidade de nome (exceto o próprio semestre)
+        if (Semester.find("name = ?1 and id <> ?2", dto.getName(), id).firstResult() != null) {
+            throw new br.com.unifor.exception.DuplicateResourceException("Nome de semestre já cadastrado: " + dto.getName());
+        }
+        // Validação de payload: nome e datas obrigatórias
+        if (dto.getName() == null || dto.getName().isBlank()) {
+            throw new br.com.unifor.exception.InvalidPayloadException("Nome do semestre é obrigatório");
+        }
+        if (dto.getStartDate() == null || dto.getEndDate() == null) {
+            throw new br.com.unifor.exception.InvalidPayloadException("Datas de início e fim são obrigatórias");
+        }
+        if (dto.getStartDate().isAfter(dto.getEndDate())) {
+            throw new br.com.unifor.exception.InvalidPayloadException("Data de início deve ser anterior à data de fim");
         }
         existing.setName(dto.getName());
         existing.setStartDate(dto.getStartDate());

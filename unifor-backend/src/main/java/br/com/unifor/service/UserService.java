@@ -43,6 +43,17 @@ public class UserService {
 
     @Transactional
     public UserResponseDTO createUser(UserRequestDTO dto) {
+        // Validação de duplicidade de email e username
+        if (User.find("email", dto.getEmail()).firstResult() != null) {
+            throw new br.com.unifor.exception.DuplicateResourceException("Email já cadastrado: " + dto.getEmail());
+        }
+        if (User.find("username", dto.getUsername()).firstResult() != null) {
+            throw new br.com.unifor.exception.DuplicateResourceException("Username já cadastrado: " + dto.getUsername());
+        }
+        // Validação de payload: pelo menos um perfil
+        if (dto.getRoles() == null || dto.getRoles().isEmpty()) {
+            throw new br.com.unifor.exception.InvalidPayloadException("Usuário deve ter pelo menos um perfil (role)");
+        }
         User user = toEntity(dto);
         user.persist();
         return toResponseDTO(user);
@@ -52,6 +63,17 @@ public class UserService {
     public UserResponseDTO updateUser(UUID id, UserRequestDTO dto) {
         User existing = (User) User.findByIdOptional(id)
                 .orElseThrow(() -> new NotFoundException("User not found: " + id));
+        // Validação de duplicidade de email e username (exceto o próprio usuário)
+        if (User.find("email = ?1 and id <> ?2", dto.getEmail(), id).firstResult() != null) {
+            throw new br.com.unifor.exception.DuplicateResourceException("Email já cadastrado: " + dto.getEmail());
+        }
+        if (User.find("username = ?1 and id <> ?2", dto.getUsername(), id).firstResult() != null) {
+            throw new br.com.unifor.exception.DuplicateResourceException("Username já cadastrado: " + dto.getUsername());
+        }
+        // Validação de payload: pelo menos um perfil
+        if (dto.getRoles() == null || dto.getRoles().isEmpty()) {
+            throw new br.com.unifor.exception.InvalidPayloadException("Usuário deve ter pelo menos um perfil (role)");
+        }
         // atualiza campos
         existing.setUsername(dto.getUsername());
         existing.setPassword(dto.getPassword());

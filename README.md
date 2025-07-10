@@ -9,13 +9,11 @@ Este é o backend do sistema de gestão acadêmica do desafio UNIFOR, uma aplica
 - [Tecnologias](#-tecnologias)
 - [Pré-requisitos](#-pré-requisitos)
 - [Configuração e Instalação](#-configuração-e-instalação)
-- [Estrutura do Banco de Dados](#-estrutura-do-banco-de-dados)
-- [API Endpoints](#-api-endpoints)
+- [Execução 100% Docker](#-execução-100-docker)
+- [Endpoints da API (REST)](#-endpoints-da-api-rest)
 - [Autenticação e Autorização](#-autenticação-e-autorização)
 - [Testes](#-testes)
-- [Build e Deploy](#-build-e-deploy)
 - [Monitoramento](#-monitoramento)
-- [Contribuição](#-contribuição)
 - [Licença](#-licença)
 
 ## 🏗 Arquitetura
@@ -26,6 +24,7 @@ O sistema é composto por quatro serviços Docker:
 * **Keycloak**: Servidor de autenticação e autorização (realm `unifor`)
 * **Unifor-DB**: PostgreSQL para dados da aplicação
 * **Backend**: Aplicação Quarkus escrita em Java 17
+* **Frontend**: Aplicação Angular (não incluída neste repositório, mas mencionada para contexto)
 
 ## ✨ Funcionalidades
 
@@ -41,8 +40,7 @@ O sistema oferece gestão completa de:
   - Cursos
   - Semestres letivos
   - Disciplinas
-  - Matrículas
-  - Currículos
+  - Matrizes curriculares
 
 ## 🛠 Tecnologias
 
@@ -53,24 +51,32 @@ O sistema oferece gestão completa de:
   - Camel Quarkus
   - RESTEasy Reactive
   - JUnit 5 (Testes)
+  - OpenAPI para documentação
+  - Flyway para migrações de banco de dados
+  - PostgreSQL como banco de dados
+  - Keycloak para autenticação e autorização
+  - OpenID Connect (OIDC) para integração com Keycloak
+  - Docker e Docker Compose para orquestração
+  - Maven para build e dependências
+  - Lombok para redução de boilerplate
+  - MapStruct para mapeamento de DTOs
+  - UUID como identificadores únicos
 
-* **Banco de Dados**
-  - PostgreSQL
-  - Flyway para migrações
-  - UUID como identificadores
 
-* **Segurança**
-  - Keycloak
-  - OpenID Connect (OIDC)
-  - Autorização baseada em roles
+* **Frontend**
+  - Angular 17
+  - Angular Material para UI
+  - RxJS para programação reativa
+  - HttpClient para comunicação com o backend
+  - Swagger UI para documentação da API
+  - Bootstrap para layout responsivo
+  - NPM para gerenciamento de pacotes
+  - TypeScript para desenvolvimento
+  - Docker para containerização
 
 ## 🚀 Pré-requisitos
 
-* Java 17 ou superior
-* Maven 3.6+
-* Docker 20.10+
-* Docker Compose 2.0+
-* PostgreSQL (opcional se usar Docker)
+- **Docker**: Certifique-se de ter o Docker Desktop instalado e em execução.
 
 ## ⚙️ Configuração e Instalação
 
@@ -80,35 +86,66 @@ git clone https://github.com/Ryansousa10/unifor-challenge-backend.git
 cd unifor-challenge-backend
 ```
 
-2. Inicie os serviços com Docker Compose:
+## 🐳 Execução 100% Docker
+
+Todo o sistema pode ser executado apenas com Docker e Docker Compose, sem necessidade de instalar Node.js, NPM, Angular CLI, Java ou PostgreSQL localmente.
+
+Basta rodar:
+
 ```bash
-docker-compose up -d
+docker-compose up --build -d
 ```
 
-O sistema estará disponível em:
-- Backend: http://localhost:8080
-- Keycloak: http://localhost:8180
+- O frontend estará disponível em: http://localhost:4200
+- Os logins para acessar o sistema são:
 
-## 📂 Estrutura do Banco de Dados
 
-O sistema utiliza migrations (Flyway) para gerenciar a estrutura:
+- ADMIN:
+  - Usuário: `admin`
+  - Senha: `admin`
+- COORDENADOR:
+  - Usuário: `coordenador`
+  - Senha: `coordenador`
+- PROFESSOR:
+  - Usuário: `professor`
+  - Senha: `professor`
+- ALUNO:
+  - Usuário: `aluno`
+  - Senha: `aluno`
+  
+### Permissões por Papel
 
-* **V1: Usuários e Papéis**
-  - users (usuários)
-  - role (papéis)
-  - user_role (relacionamento)
+| Recurso      | ADMIN | COORDENADOR | PROFESSOR | ALUNO |
+|--------------|:-----:|:-----------:|:---------:|:-----:|
+| Usuários     | CRUD  |      R      |     R     |   R   |
+| Cursos       | CRUD  |    CRUD     |     R     |   R   |
+| Disciplinas  | CRUD  |    CRUD     |     R     |   R   |
+| Currículos   | CRUD  |    CRUD     |     R     |   R   |
+| Semestres    | CRUD  |    CRUD     |     R     |   R   |
 
-* **V2: Entidades Acadêmicas**
-  - course (cursos)
-  - semester (semestres)
-  - discipline (disciplinas)
+CRUD = Criar, Listar, Atualizar, Remover; R = Listar/Visualizar
 
-* **V3: Estrutura Curricular**
-  - curriculum
-  - curric_disc
+- O backend estará disponível em: http://localhost:8081
+- O Keycloak estará disponível em: http://localhost:8080
+- O banco de dados PostgreSQL estará disponível em: localhost:5432
 
-* **V4: Matrículas**
-  - enrollment
+O build do frontend Angular é feito automaticamente no container e servido via nginx. O backend Java é buildado e executado no container. O Keycloak e os bancos de dados também sobem automaticamente.
+
+Se desejar rodar apenas um serviço (por exemplo, só o backend ou só o frontend), utilize:
+
+```bash
+docker-compose up backend
+```
+
+ou
+
+```bash
+docker-compose up frontend
+```
+
+Consulte o arquivo `docker-compose.yml` para mais detalhes e customizações.
+
+---
 
 ## 🌐 Endpoints da API (REST)
 
@@ -149,8 +186,9 @@ Os endpoints seguem o padrão REST e estão documentados no arquivo `src/main/re
 - PUT    /semester/{id}      - Atualiza semestre
 - DELETE /semester/{id}      - Remove semestre
 
-### Semestres, Currículos e Matrículas
 [Documentação completa disponível no Swagger unifor-backend\src\main\resources\openapi.yaml]
+
+---
 
 ## 🔐 Autenticação e Autorização
 
@@ -164,9 +202,13 @@ O sistema utiliza Keycloak com:
   - PROFESSOR
   - ALUNO
 
+* **Keycloak**: realm `unifor`, client `unifor-backend` (tipo service), roles definidas (`ADMIN`, `COORDENADOR`, `PROFESSOR`, `ALUNO`).
+* **Quarkus OIDC**: configurado em `application.properties` e sobrescrito no `docker-compose.yml`.
+* Endpoints protegidos por `@RolesAllowed` e políticas RESTEasy Reactive.
+---
 ## 🧪 Testes
 
-O projeto possui testes automatizados cobrindo:
+O projeto possui testes unitários e de integração utilizando JUnit 5 e Quarkus Test Framework. Os testes estão organizados em três pacotes principais:
 
 1. **Migrations**: Validação do banco de dados
 2. **Services**: Lógica de negócio
@@ -177,23 +219,13 @@ Para executar os testes:
 ./mvnw test
 ```
 
-## 📦 Build e Deploy
-
-Gerando o JAR:
-```bash
-./mvnw package
-```
-
-Gerando imagem Docker:
-```bash
-docker build -f src/main/docker/Dockerfile.jvm -t unifor-backend:latest .
-```
-
 ## 📊 Monitoramento
 
 - Métricas: `/q/metrics`
 - Health checks: `/q/health`
 - Logs: Configurados em níveis (INFO, DEBUG) por categoria
+
+---
 
 ## 📄 Licença
 

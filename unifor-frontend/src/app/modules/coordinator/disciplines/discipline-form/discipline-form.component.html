@@ -1,0 +1,96 @@
+<div class="discipline-form-container">
+  <div class="discipline-form-header">
+    <h2>{{ isEditMode ? 'Editar' : 'Nova' }} Disciplina</h2>
+  </div>
+
+  <div *ngIf="error" class="discipline-form-error-modern">
+    <pre>{{ error }}</pre>
+  </div>
+
+  <div *ngIf="success" class="discipline-form-success-modern">
+    <pre>{{ success }}</pre>
+  </div>
+
+  <div class="loading-indicator" *ngIf="loading">
+    Carregando...
+  </div>
+
+  <form [formGroup]="disciplineForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+    <div class="form-group">
+      <label for="name">Nome da Disciplina *</label>
+      <input
+        type="text"
+        id="name"
+        formControlName="name"
+        class="form-control"
+        [class.is-invalid]="nameControl?.invalid && nameControl?.touched"
+      >
+      <div class="discipline-form-error" *ngIf="nameControl?.invalid && nameControl?.touched">
+        <span *ngIf="nameControl?.errors?.['required']" class="required-error">Nome da disciplina é obrigatório.</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="code">Código da Disciplina *</label>
+      <input
+        type="text"
+        id="code"
+        formControlName="code"
+        class="form-control"
+        [class.is-invalid]="codeControl?.invalid && codeControl?.touched"
+      >
+      <div class="discipline-form-error" *ngIf="codeControl?.invalid && codeControl?.touched">
+        <span *ngIf="codeControl?.errors?.['required']" class="required-error">Código da disciplina é obrigatório.</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="workload">Carga Horária (horas) *</label>
+      <input
+        type="number"
+        id="workload"
+        formControlName="workload"
+        class="form-control"
+        [class.is-invalid]="workloadControl?.invalid && workloadControl?.touched"
+        min="1"
+      >
+      <div class="discipline-form-error" *ngIf="workloadControl?.invalid && workloadControl?.touched">
+        <span *ngIf="workloadControl?.errors?.['required']" class="required-error">Carga horária é obrigatória.</span>
+        <span *ngIf="workloadControl?.errors?.['min']" class="required-error">Carga horária deve ser maior que zero.</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="credits">Créditos *</label>
+      <input
+        type="number"
+        id="credits"
+        formControlName="credits"
+        class="form-control"
+        [class.is-invalid]="creditsControl?.invalid && creditsControl?.touched"
+        min="1"
+        max="10"
+      >
+      <div class="discipline-form-error" *ngIf="creditsControl?.invalid && creditsControl?.touched">
+        <span *ngIf="creditsControl?.errors?.['required']" class="required-error">Número de créditos é obrigatório.</span>
+        <span *ngIf="creditsControl?.errors?.['min']" class="required-error">Créditos deve ser maior que zero.</span>
+        <span *ngIf="creditsControl?.errors?.['max']" class="required-error">Créditos não pode ser maior que 10.</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Descrição</label>
+      <textarea
+        id="description"
+        formControlName="description"
+        class="form-control"
+        rows="4"
+      ></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="navigateBack()">Cancelar</button>
+      <button type="submit" class="btn-primary" [disabled]="disciplineForm.invalid">Salvar</button>
+    </div>
+  </form>
+</div>
