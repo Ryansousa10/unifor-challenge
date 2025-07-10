@@ -34,36 +34,6 @@
       </div>
     </div>
 
-    <!-- Card para Professor -->
-    <div class="card" *ngIf="authService.isProfessor()" (click)="navigateToProfessorPanel()">
-      <div class="card-icon">
-        <i class="fas fa-chalkboard-teacher"></i>
-      </div>
-      <div class="card-content">
-        <h2>Área do Professor</h2>
-        <p>Gerencie suas disciplinas e acompanhe alunos</p>
-        <small><i class="fas fa-book"></i> Ferramentas para ensino</small>
-      </div>
-      <div class="card-action">
-        <i class="fas fa-arrow-right"></i>
-      </div>
-    </div>
-
-    <!-- Card para Aluno -->
-    <div class="card" *ngIf="authService.isAluno()" (click)="navigateToStudentPanel()">
-      <div class="card-icon">
-        <i class="fas fa-user-graduate"></i>
-      </div>
-      <div class="card-content">
-        <h2>Portal do Aluno</h2>
-        <p>Visualize disciplinas, notas e informações acadêmicas</p>
-        <small><i class="fas fa-graduation-cap"></i> Acesso à vida acadêmica</small>
-      </div>
-      <div class="card-action">
-        <i class="fas fa-arrow-right"></i>
-      </div>
-    </div>
-
     <!-- Card para Visualizar Currículos (disponível para todos) -->
     <div class="card" (click)="navigateToViewCurriculums()">
       <div class="card-icon">

@@ -27,18 +27,6 @@ const routes: Routes = [
     data: { roles: ['COORDENADOR'] }
   },
   {
-    path: 'professor',
-    loadChildren: () => import('./modules/professor/professor.module').then(m => m.ProfessorModule),
-    canActivate: [AuthGuard],
-    data: { roles: ['PROFESSOR'] }
-  },
-  {
-    path: 'student',
-    loadChildren: () => import('./modules/student/student.module').then(m => m.StudentModule),
-    canActivate: [AuthGuard],
-    data: { roles: ['ALUNO'] }
-  },
-  {
     path: 'view',
     loadChildren: () => import('./modules/view/view.module').then(m => m.ViewModule),
     canActivate: [AuthGuard]
@@ -47,7 +35,7 @@ const routes: Routes = [
     path: 'coordinator/curriculums/:id',
     component: CurriculumDetailsComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['COORDENADOR'] }
+    data: { roles: ['COORDENADOR', 'PROFESSOR', 'ALUNO'] }
   },
   {
     path: '**',
