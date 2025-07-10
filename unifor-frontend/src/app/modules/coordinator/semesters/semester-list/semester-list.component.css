@@ -63,17 +63,16 @@
 
 .semester-table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  background: #fff;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  min-width: 700px;
+  border-collapse: collapse;
+  margin-bottom: 20px;
 }
 
-.semester-table th, .semester-table td {
+.semester-table th,
+.semester-table td {
   padding: 14px 12px;
   text-align: left;
+  font-size: 0.99rem;
 }
 
 .semester-table th {
@@ -85,13 +84,12 @@
 }
 
 .semester-table tbody tr {
-  border-bottom: none;
+  border-bottom: 1.5px solid #f0f0f0;
   transition: background 0.15s;
-  position: relative;
 }
 
-.semester-table tbody tr:last-child {
-  border-bottom: none;
+.semester-table tbody tr:hover {
+  background: #f7fafc;
 }
 
 .semester-table td {
@@ -99,22 +97,6 @@
   font-size: 0.99rem;
   background: #fff;
   position: relative;
-}
-
-.semester-table tbody tr::after {
-  content: '';
-  display: block;
-  position: absolute;
-  left: 16px;
-  right: 16px;
-  bottom: 0;
-  height: 1px;
-  background: #ececec;
-  pointer-events: none;
-}
-
-.semester-table tbody tr:last-child::after {
-  display: none;
 }
 
 .actions-column {

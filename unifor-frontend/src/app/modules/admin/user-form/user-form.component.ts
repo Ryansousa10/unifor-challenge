@@ -17,6 +17,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
     availableRoles: any[] = [];
     selectedRoles: string[] = [];
     errorMessage: string | null = null;
+    success: string = '';
 
     private subs: Subscription[] = [];
 
@@ -115,6 +116,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
     onSubmit(): void {
         this.errorMessage = null;
+        this.success = '';
         this.userForm.get('email')?.setErrors(null);
         this.userForm.get('username')?.setErrors(null);
 
@@ -139,7 +141,10 @@ export class UserFormComponent implements OnInit, OnDestroy {
             ? this.userService.updateUser(this.userId!, userData)
             : this.userService.createUser(userData);
         const sub = request$.subscribe({
-            next: () => this.router.navigate(['/admin/users']),
+            next: () => {
+                this.success = this.isEditMode ? 'Usuário atualizado com sucesso!' : 'Usuário criado com sucesso!';
+                setTimeout(() => this.router.navigate(['/admin/users']), 1200);
+            },
             error: (err) => this.handleSubmitError(err)
         });
         this.subs.push(sub);

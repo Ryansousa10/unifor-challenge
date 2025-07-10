@@ -4,6 +4,9 @@
     <div *ngIf="error" class="course-form-error-modern">
       <pre>{{ error }}</pre>
     </div>
+    <div *ngIf="success" class="course-form-success-modern">
+      <pre>{{ success }}</pre>
+    </div>
     <div class="form-group">
       <label for="name">Nome do Curso <span style="color:#d32f2f">*</span></label>
       <input type="text" id="name" formControlName="name">

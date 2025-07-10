@@ -63,17 +63,16 @@
 
 .user-table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  background: #fff;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  min-width: 700px;
+  border-collapse: collapse;
+  margin-bottom: 20px;
 }
 
-.user-table th, .user-table td {
+.user-table th,
+.user-table td {
   padding: 14px 12px;
   text-align: left;
+  font-size: 0.99rem;
 }
 
 .user-table th {

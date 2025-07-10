@@ -5,6 +5,10 @@
             <pre>{{ errorMessage }}</pre>
         </div>
 
+        <div *ngIf="success" class="user-form-success-modern">
+            <pre>{{ success }}</pre>
+        </div>
+
         <div class="form-group">
             <label for="username">Nome de Usuário <span style="color:#d32f2f">*</span></label>
             <input type="text" id="username" formControlName="username">

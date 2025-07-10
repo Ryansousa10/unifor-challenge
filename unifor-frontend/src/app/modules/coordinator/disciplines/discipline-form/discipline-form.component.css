@@ -149,6 +149,37 @@
   min-width: 0;
 }
 
+.discipline-form-success-modern {
+  background: #e6f9ec;
+  color: #218838;
+  border: 1px solid #b7ebc6;
+  border-radius: 6px;
+  padding: 12px 18px;
+  margin-bottom: 18px;
+  font-size: 1.1em;
+  font-weight: 500;
+  box-shadow: 0 2px 8px 0 rgba(33, 136, 56, 0.07);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.discipline-form-success-modern pre {
+  background: none;
+  color: inherit;
+  margin: 0;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.discipline-form-success-modern::before {
+  content: '\2714'; /* checkmark */
+  color: #218838;
+  font-size: 1.5em;
+  margin-right: 8px;
+}
+
 @keyframes fadeInDown {
   from {
     opacity: 0;
