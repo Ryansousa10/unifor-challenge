@@ -1,0 +1,90 @@
+<div class="curriculum-form-container">
+    <h2>{{ isEditMode ? 'Editar' : 'Nova' }} Matriz Curricular</h2>
+
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+    <form [formGroup]="curriculumForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <label for="name">Nome <span style="color:#d32f2f">*</span></label>
+            <input type="text" id="name" formControlName="name" class="form-control"
+                   [ngClass]="{'is-invalid': submitted && f.name.errors}">
+            <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                <div *ngIf="f.name.errors.required">Nome é obrigatório</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="courseId">Curso <span style="color:#d32f2f">*</span></label>
+            <select id="courseId" formControlName="courseId" class="form-control"
+                    [ngClass]="{'is-invalid': submitted && f.courseId.errors}">
+                <option value="">Selecione um curso</option>
+                <option *ngFor="let course of courses" [value]="course.id">{{ course.name }}</option>
+            </select>
+            <div *ngIf="submitted && f.courseId.errors" class="invalid-feedback">
+                <div *ngIf="f.courseId.errors.required">Curso é obrigatório</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="semesterId">Semestre <span style="color:#d32f2f">*</span></label>
+            <select id="semesterId" formControlName="semesterId" class="form-control"
+                    [ngClass]="{'is-invalid': submitted && f.semesterId.errors}">
+                <option value="">Selecione um semestre</option>
+                <option *ngFor="let semester of semesters" [value]="semester.id">{{ semester.name }}</option>
+            </select>
+            <div *ngIf="submitted && f.semesterId.errors" class="invalid-feedback">
+                <div *ngIf="f.semesterId.errors.required">Semestre é obrigatório</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="active">Status <span style="color:#d32f2f">*</span></label>
+            <div class="form-check">
+                <input type="checkbox" id="active" formControlName="active" class="form-check-input">
+                <label class="form-check-label" for="active">Ativo</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Descrição <span style="color:#d32f2f">*</span></label>
+            <textarea id="description" formControlName="description" class="form-control" rows="3"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="disciplineSelect">Selecionar Disciplinas <span style="color:#d32f2f">*</span></label>
+            <select id="disciplineSelect" class="form-control" (change)="addDiscipline($event)"
+                    [ngClass]="{'is-invalid': submitted && selectedDisciplines.length === 0}">
+                <option value="">Selecione uma disciplina</option>
+                <option *ngFor="let discipline of disciplines" [value]="discipline.id">{{ discipline.name }}</option>
+            </select>
+            <div *ngIf="submitted && selectedDisciplines.length === 0" class="invalid-feedback">
+                Selecione pelo menos uma disciplina
+            </div>
+        </div>
+        <div class="disciplines-list">
+            <div *ngFor="let discipline of selectedDisciplines; let i = index" class="discipline-item">
+                <span class="flex-grow-1">{{ discipline.name }}</span>
+                <div style="margin-left:auto; display:flex; gap:8px;">
+                    <button type="button" class="btn btn-secondary btn-sm" (click)="moveDisciplineUp(i)"
+                            [disabled]="i === 0" title="Subir">
+                        <i class="fa fa-arrow-up"></i>
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-sm" (click)="moveDisciplineDown(i)"
+                            [disabled]="i === selectedDisciplines.length - 1" title="Descer">
+                        <i class="fa fa-arrow-down"></i>
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm" (click)="removeDiscipline(i)" title="Remover">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="form-group mt-4">
+            <button type="submit" class="btn btn-primary mr-2" [disabled]="loading">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                Salvar
+            </button>
+            <button type="button" class="btn btn-secondary" (click)="goBack()">Voltar</button>
+        </div>
+    </form>
+</div>

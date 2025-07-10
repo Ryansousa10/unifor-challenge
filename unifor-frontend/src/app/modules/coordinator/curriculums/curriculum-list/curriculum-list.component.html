@@ -1,0 +1,55 @@
+<div class="curriculum-list-container">
+  <div class="curriculum-list-header">
+    <h2>Matrizes Curriculares</h2>
+    <button class="btn-primary" routerLink="/coordinator/curriculums/new">Nova Matriz</button>
+  </div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+  <div class="table-responsive" *ngIf="curriculums.length > 0">
+    <table class="curriculum-table">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Curso</th>
+          <th>Semestre</th>
+          <th>Status</th>
+          <th>Disciplinas</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let curriculum of curriculums">
+          <td>{{ curriculum.name }}</td>
+          <td>{{ getCourseName(curriculum.courseId) }}</td>
+          <td>{{ getSemesterName(curriculum.semesterId) }}</td>
+          <td>
+            <span [ngClass]="{'text-success': curriculum.active, 'text-danger': !curriculum.active}">
+              {{ curriculum.active ? 'Ativa' : 'Inativa' }}
+            </span>
+          </td>
+          <td>
+            <span *ngIf="curriculum.disciplines && curriculum.disciplines.length > 0">
+              {{ curriculum.disciplines.length }} disciplina(s)
+            </span>
+            <span *ngIf="!curriculum.disciplines || curriculum.disciplines.length === 0" class="text-muted">
+              Nenhuma
+            </span>
+          </td>
+          <td class="actions-column">
+            <button class="btn-edit" [routerLink]="['/coordinator/curriculums', curriculum.id]" title="Visualizar">
+              <i class="fa fa-eye"></i>
+            </button>
+            <button class="btn-edit" [routerLink]="['/coordinator/curriculums/edit', curriculum.id]" title="Editar">
+              <i class="fa fa-edit"></i>
+            </button>
+            <button class="btn-delete" (click)="deleteCurriculum(curriculum.id)" title="Excluir">
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="empty-state" *ngIf="curriculums.length === 0 && !error">
+    Nenhuma matriz curricular encontrada.
+  </div>
+</div>

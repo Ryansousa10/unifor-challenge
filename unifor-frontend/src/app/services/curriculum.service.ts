@@ -16,34 +16,34 @@ export class CurriculumService {
   constructor(private http: HttpClient) { }
 
   getCurriculums(): Observable<Curriculum[]> {
-    return this.http.get<Curriculum[]>(`${this.getApiUrl()}/curriculums`);
+    return this.http.get<Curriculum[]>(`${this.getApiUrl()}/curriculum`);
   }
 
   getCurriculum(id: string): Observable<Curriculum> {
-    return this.http.get<Curriculum>(`${this.getApiUrl()}/curriculums/${id}`);
+    return this.http.get<Curriculum>(`${this.getApiUrl()}/curriculum/${id}`);
   }
 
   getCurriculumWithDisciplines(id: string): Observable<CurriculumWithDisciplines> {
-    return this.http.get<CurriculumWithDisciplines>(`${this.getApiUrl()}/curriculums/${id}/disciplines`);
+    return this.http.get<CurriculumWithDisciplines>(`${this.getApiUrl()}/curriculum/${id}/disciplines`);
   }
 
   createCurriculum(curriculum: Curriculum): Observable<Curriculum> {
-    return this.http.post<Curriculum>(`${this.getApiUrl()}/curriculums`, curriculum);
+    return this.http.post<Curriculum>(`${this.getApiUrl()}/curriculum`, curriculum);
   }
 
   updateCurriculum(id: string, curriculum: Curriculum): Observable<Curriculum> {
-    return this.http.put<Curriculum>(`${this.getApiUrl()}/curriculums/${id}`, curriculum);
+    return this.http.put<Curriculum>(`${this.getApiUrl()}/curriculum/${id}`, curriculum);
   }
 
   deleteCurriculum(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.getApiUrl()}/curriculums/${id}`);
+    return this.http.delete<void>(`${this.getApiUrl()}/curriculum/${id}`);
   }
 
   addDisciplineToCurriculum(curriculumId: string, disciplineId: string, data: CurricDisc): Observable<any> {
-    return this.http.post(`${this.getApiUrl()}/curriculums/${curriculumId}/disciplines/${disciplineId}`, data);
+    return this.http.post(`${this.getApiUrl()}/curriculum/${curriculumId}/disciplines/${disciplineId}`, data);
   }
 
   removeDisciplineFromCurriculum(curriculumId: string, disciplineId: string): Observable<void> {
-    return this.http.delete<void>(`${this.getApiUrl()}/curriculums/${curriculumId}/disciplines/${disciplineId}`);
+    return this.http.delete<void>(`${this.getApiUrl()}/curriculum/${curriculumId}/disciplines/${disciplineId}`);
   }
 }

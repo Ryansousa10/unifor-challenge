@@ -1,0 +1,225 @@
+.curriculum-details-container {
+  max-width: 800px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 22px;
+  box-shadow: 0 6px 32px rgba(0, 51, 102, 0.13);
+  padding: 40px 36px 32px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  position: relative;
+}
+
+.curriculum-details-header,
+.curriculum-details-container h2 {
+  font-size: 2.3rem;
+  font-weight: 800;
+  color: #003366;
+  margin-bottom: 18px;
+  text-align: center;
+  letter-spacing: -1.5px;
+  text-shadow: 0 2px 8px rgba(0,51,102,0.07);
+}
+
+.row-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px 40px;
+  margin-bottom: 22px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+  min-width: 200px;
+  flex: 1 1 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+label {
+  font-size: 1.01rem;
+  color: #0055a5;
+  font-weight: 600;
+  margin-bottom: 2px;
+  letter-spacing: 0.2px;
+}
+
+.field-value {
+  font-size: 1.13rem;
+  color: #222;
+  margin-top: 0;
+  font-weight: 600;
+  background: #f0f0f0;
+  border-radius: 7px;
+  padding: 7px 12px;
+  box-shadow: 0 1px 4px rgba(0,51,102,0.04);
+}
+
+.card {
+  margin-bottom: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 18px rgba(0,51,102,0.09);
+  border: 1.5px solid #e3e8f0;
+  background: linear-gradient(120deg, #fafdff 80%, #e3e8f0 100%);
+  transition: box-shadow 0.2s;
+  cursor: default !important;
+}
+.card:hover {
+  box-shadow: 0 8px 32px rgba(0,51,102,0.16);
+  cursor: default !important;
+}
+
+.card-body {
+  padding: 26px 28px 18px 28px;
+  cursor: default !important;
+}
+
+.card-body * {
+  cursor: default !important;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #003366;
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
+}
+
+.table {
+  width: 100%;
+  min-width: 600px;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,51,102,0.04);
+}
+
+.table th, .table td {
+  padding: 15px 12px;
+  text-align: left;
+  font-size: 1.01rem;
+}
+
+.table th {
+  background: #eaf4fb;
+  color: #003366;
+  font-weight: 700;
+  font-size: 1.07rem;
+  border-bottom: 2px solid #e3e8f0;
+  text-align: center;
+}
+
+.table tbody tr {
+  border-bottom: 1.5px solid #f0f0f0;
+  transition: background 0.15s;
+}
+
+.table tbody tr:hover {
+  background: #f1f8fe;
+}
+
+.table td {
+  color: #222;
+  font-size: 1.01rem;
+  text-align: center;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.empty-state {
+  text-align: center;
+  color: #888;
+  font-size: 1.08rem;
+  margin-top: 14px;
+}
+
+.btn.btn-secondary {
+  background: linear-gradient(90deg, #003366 70%, #0055a5 100%);
+  color: #fff;
+  border: none;
+  padding: 12px 36px;
+  border-radius: 10px;
+  font-size: 1.13rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s, box-shadow 0.18s, transform 0.12s;
+  box-shadow: 0 2px 12px rgba(0,51,102,0.10);
+  letter-spacing: 0.5px;
+}
+.btn.btn-secondary:hover {
+  background: linear-gradient(90deg, #0055a5 60%, #003366 100%);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 24px rgba(0,51,102,0.18);
+}
+
+.text-success {
+  color: #388e3c !important;
+}
+
+.text-danger {
+  color: #d32f2f !important;
+}
+
+.alert {
+  padding: 14px;
+  border-radius: 10px;
+  margin-bottom: 24px;
+  font-size: 1.07rem;
+  background: #f8d7da;
+  color: #721c24;
+  border: 1.5px solid #f5c6cb;
+  box-shadow: 0 2px 8px rgba(211,47,47,0.07);
+}
+
+@media (max-width: 900px) {
+  .curriculum-details-container {
+    max-width: 99vw;
+    padding: 18px 2vw 16px 2vw;
+  }
+  .row-fields {
+    flex-direction: column;
+    gap: 14px 0;
+  }
+  .card-body {
+    padding: 12px 2vw 10px 2vw;
+  }
+  .table {
+    min-width: 0;
+    font-size: 0.97rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .curriculum-details-header,
+  .curriculum-details-container h2 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+  }
+  .curriculum-details-container {
+    padding: 8px 1vw 8px 1vw;
+    border-radius: 10px;
+  }
+  .card {
+    border-radius: 8px;
+  }
+  .card-body {
+    padding: 7px 1vw 6px 1vw;
+  }
+  .form-group {
+    min-width: 0;
+    flex: 1 1 100%;
+  }
+  .table th, .table td {
+    padding: 8px 4px;
+    font-size: 0.92rem;
+  }
+}

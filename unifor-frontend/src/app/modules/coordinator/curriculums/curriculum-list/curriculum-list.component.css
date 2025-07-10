@@ -1,4 +1,4 @@
-.discipline-list-container {
+.curriculum-list-container {
   max-width: 1200px;
   margin: 40px auto 0 auto;
   background: #fff;
@@ -7,14 +7,14 @@
   padding: 32px 28px 24px 28px;
 }
 
-.discipline-list-header {
+.curriculum-list-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
 }
 
-.discipline-list-header h2 {
+.curriculum-list-header h2 {
   font-size: 2rem;
   font-weight: 700;
   color: #003366;
@@ -33,7 +33,6 @@
   transition: background 0.18s, box-shadow 0.18s;
   box-shadow: 0 2px 8px rgba(0,51,102,0.08);
 }
-
 .btn-primary:hover {
   background: #0055a5;
 }
@@ -62,21 +61,21 @@
   overflow-x: auto;
 }
 
-.discipline-table {
+.curriculum-table {
   width: 100%;
   min-width: 700px;
   border-collapse: collapse;
   margin-bottom: 20px;
 }
 
-.discipline-table th,
-.discipline-table td {
+.curriculum-table th,
+.curriculum-table td {
   padding: 14px 12px;
   text-align: left;
   font-size: 0.99rem;
 }
 
-.discipline-table th {
+.curriculum-table th {
   background: #f1f8fe;
   color: #003366;
   font-weight: 600;
@@ -84,7 +83,7 @@
   border-bottom: 2px solid #e3e8f0;
 }
 
-.discipline-table tbody tr {
+.curriculum-table tbody tr {
   border-bottom: 1.5px solid #f0f0f0;
   transition: background 0.15s, box-shadow 0.15s;
   cursor: pointer;
@@ -92,15 +91,17 @@
   z-index: 0;
 }
 
-.discipline-table tbody tr:hover {
+.curriculum-table tbody tr:hover {
   background: #f7fafc;
   box-shadow: 0 4px 16px rgba(0,0,0,0.10);
   z-index: 2;
 }
 
-.discipline-table td {
+.curriculum-table td {
   color: #222;
   font-size: 0.99rem;
+  background: #fff;
+  position: relative;
   transition: background 0.15s;
 }
 
@@ -118,6 +119,8 @@
   padding: 0;
   font-size: 1.15rem;
   border-radius: 7px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  transition: box-shadow 0.2s;
 }
 
 .btn-edit {
@@ -134,6 +137,7 @@
 
 .btn-edit:hover {
   background: #003366;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.28);
 }
 
 .btn-delete {
@@ -150,6 +154,7 @@
 
 .btn-delete:hover {
   background: #c62828;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.28);
 }
 
 .empty-state {
@@ -157,43 +162,31 @@
   color: #888;
   font-size: 1.1rem;
   margin-top: 32px;
-  padding: 30px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-}
-
-.empty-state p {
-  margin-bottom: 15px;
-  color: #666;
 }
 
 @media (max-width: 900px) {
-  .discipline-list-container {
+  .curriculum-list-container {
     padding: 18px 4vw 16px 4vw;
   }
-
-  .discipline-list-header h2 {
+  .curriculum-list-header h2 {
     font-size: 1.3rem;
   }
-
-  .discipline-table th, .discipline-table td {
+  .curriculum-table th, .curriculum-table td {
     padding: 10px 6px;
     font-size: 0.95rem;
   }
 }
 
 @media (max-width: 600px) {
-  .discipline-list-header {
+  .curriculum-list-header {
     flex-direction: column;
     gap: 12px;
     align-items: stretch;
   }
-
-  .discipline-list-container {
+  .curriculum-list-container {
     padding: 10px 2vw 10px 2vw;
   }
-
-  .discipline-table th, .discipline-table td {
+  .curriculum-table th, .curriculum-table td {
     padding: 8px 4px;
     font-size: 0.92rem;
   }

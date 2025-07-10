@@ -1,5 +1,6 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { AuthService } from './services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +16,7 @@ export class AppComponent implements OnInit {
   dropdownOpen = false;
   mobileMenuOpen = false;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   async ngOnInit() {
     if (await this.authService.isAuthenticated()) {
@@ -94,5 +95,9 @@ export class AppComponent implements OnInit {
 
   get isAluno(): boolean {
     return this.authService.isAluno();
+  }
+
+  goToDashboard(): void {
+    this.router.navigate(['/dashboard']);
   }
 }

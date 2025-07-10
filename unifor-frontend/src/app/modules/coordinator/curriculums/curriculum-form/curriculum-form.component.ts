@@ -3,73 +3,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CurriculumService } from '../../../../services/curriculum.service';
 import { AcademicService } from '../../../../services/academic.service';
+import { Curriculum } from '../../../../models/curriculum.model';
 
 @Component({
   selector: 'app-curriculum-form',
-  template: `
-    <div class="container mt-4">
-      <div class="card">
-        <div class="card-header">
-          <h2>{{ isEditMode ? 'Editar' : 'Nova' }} Matriz Curricular</h2>
-        </div>
-        <div class="card-body">
-          <div *ngIf="error" class="alert alert-danger">
-            {{ error }}
-          </div>
-          
-          <form [formGroup]="curriculumForm" (ngSubmit)="onSubmit()">
-            <div class="form-group">
-              <label for="name" class="form-label">Nome</label>
-              <input type="text" id="name" formControlName="name" class="form-control" 
-                     [ngClass]="{'is-invalid': submitted && f.name.errors}">
-              <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-                <div *ngIf="f.name.errors.required">Nome é obrigatório</div>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="courseId" class="form-label">Curso</label>
-              <select id="courseId" formControlName="courseId" class="form-control"
-                      [ngClass]="{'is-invalid': submitted && f.courseId.errors}">
-                <option value="">Selecione um curso</option>
-                <option *ngFor="let course of courses" [value]="course.id">
-                  {{ course.name }}
-                </option>
-              </select>
-              <div *ngIf="submitted && f.courseId.errors" class="invalid-feedback">
-                <div *ngIf="f.courseId.errors.required">Curso é obrigatório</div>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="active" class="form-label">Status</label>
-              <div class="form-check">
-                <input type="checkbox" id="active" formControlName="active" class="form-check-input">
-                <label class="form-check-label" for="active">Ativo</label>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="description" class="form-label">Descrição</label>
-              <textarea id="description" formControlName="description" class="form-control" rows="3"></textarea>
-            </div>
-
-            <div class="form-group mt-4">
-              <button type="submit" class="btn btn-primary mr-2" [disabled]="loading">
-                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-                Salvar
-              </button>
-              <button type="button" class="btn btn-secondary" (click)="goBack()">Voltar</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  `,
-  styles: [`
-    .mr-1 { margin-right: 0.25rem; }
-    .mr-2 { margin-right: 0.5rem; }
-  `]
+  templateUrl: './curriculum-form.component.html',
+  styleUrls: ['./curriculum-form.component.css']
 })
 export class CurriculumFormComponent implements OnInit {
   curriculumForm: FormGroup;
@@ -79,6 +18,10 @@ export class CurriculumFormComponent implements OnInit {
   submitted = false;
   error = '';
   courses: any[] = [];
+  semesters: any[] = [];
+  disciplines: any[] = [];
+  selectedDisciplines: any[] = [];
+  curriculums: Curriculum[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -90,13 +33,17 @@ export class CurriculumFormComponent implements OnInit {
     this.curriculumForm = this.formBuilder.group({
       name: ['', Validators.required],
       courseId: ['', Validators.required],
+      semesterId: ['', Validators.required],
       active: [true],
-      description: ['']
+      description: ['', Validators.required]
     });
   }
 
   ngOnInit(): void {
     this.loadCourses();
+    this.loadSemesters();
+    this.loadDisciplines();
+    this.loadCurriculums();
 
     this.curriculumId = this.route.snapshot.paramMap.get('id');
     this.isEditMode = !!this.curriculumId;
@@ -118,16 +65,81 @@ export class CurriculumFormComponent implements OnInit {
     });
   }
 
+  loadSemesters(): void {
+    this.academicService.getSemesters().subscribe({
+      next: (data) => {
+        this.semesters = data;
+      },
+      error: (err) => {
+        this.error = 'Erro ao carregar semestres. Por favor, tente novamente.';
+        console.error('Erro ao carregar semestres:', err);
+      }
+    });
+  }
+
+  loadDisciplines(): void {
+    this.academicService.getDisciplines().subscribe({
+      next: (data) => {
+        this.disciplines = data;
+      },
+      error: (err) => {
+        this.error = 'Erro ao carregar disciplinas. Por favor, tente novamente.';
+        console.error('Erro ao carregar disciplinas:', err);
+      }
+    });
+  }
+
+  loadCurriculums(): void {
+    this.curriculumService.getCurriculums().subscribe({
+      next: (data) => {
+        // Garante que cada curriculum tenha os campos esperados
+        this.curriculums = (data as any[]).map(item => ({
+          id: item.id,
+          courseId: item.courseId,
+          semesterId: item.semesterId,
+          name: item.name ?? '',
+          description: item.description ?? '',
+          active: item.active ?? false,
+          disciplines: item.disciplines ?? []
+        }));
+      },
+      error: () => this.curriculums = []
+    });
+  }
+
   loadCurriculum(id: string): void {
     this.loading = true;
     this.curriculumService.getCurriculum(id).subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.curriculumForm.patchValue({
           name: data.name,
           courseId: data.courseId,
+          semesterId: data.semesterId || (data.semester && data.semester.id) || '',
           active: data.active,
           description: data.description
         });
+        // Monta selectedDisciplines com nome e ordena pelo ordering
+        let disciplinesArr: any[] = [];
+        if (Array.isArray(data.disciplines)) {
+          disciplinesArr = data.disciplines;
+        } else if (data.disciplines && typeof data.disciplines === 'object') {
+          disciplinesArr = Object.values(data.disciplines);
+        } else if (data.disciplines) {
+          disciplinesArr = [data.disciplines];
+        } else if (data.curriculum && Array.isArray(data.curriculum.disciplines)) {
+          disciplinesArr = data.curriculum.disciplines;
+        }
+        this.selectedDisciplines = disciplinesArr
+          .map((d: any) => {
+            const discId = d.disciplineId || d.id;
+            const disc = this.disciplines.find((x: any) => x.id === discId);
+            return {
+              id: discId,
+              name: disc ? disc.name : '(Disciplina não encontrada)',
+              ordering: d.ordering
+            };
+          })
+          .sort((a, b) => a.ordering - b.ordering);
         this.loading = false;
       },
       error: (err) => {
@@ -138,43 +150,103 @@ export class CurriculumFormComponent implements OnInit {
     });
   }
 
+  addDiscipline(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    const disciplineId = target?.value;
+    if (!disciplineId) return;
+    const discipline = this.disciplines.find(d => d.id === disciplineId);
+    if (discipline && !this.selectedDisciplines.find(d => d.id === discipline.id)) {
+      this.selectedDisciplines.push({ ...discipline, ordering: this.selectedDisciplines.length + 1 });
+    }
+    // Resetar o select após adicionar
+    if (target) target.value = '';
+  }
+
+  removeDiscipline(index: number): void {
+    this.selectedDisciplines.splice(index, 1);
+    this.updateOrdering();
+  }
+
+  moveDisciplineUp(index: number): void {
+    if (index > 0) {
+      [this.selectedDisciplines[index - 1], this.selectedDisciplines[index]] = [this.selectedDisciplines[index], this.selectedDisciplines[index - 1]];
+      this.updateOrdering();
+    }
+  }
+
+  moveDisciplineDown(index: number): void {
+    if (index < this.selectedDisciplines.length - 1) {
+      [this.selectedDisciplines[index + 1], this.selectedDisciplines[index]] = [this.selectedDisciplines[index], this.selectedDisciplines[index + 1]];
+      this.updateOrdering();
+    }
+  }
+
+  updateOrdering(): void {
+    this.selectedDisciplines.forEach((d, i) => d.ordering = i + 1);
+  }
+
   get f() { return this.curriculumForm.controls; }
 
-  onSubmit(): void {
+  async onSubmit() {
     this.submitted = true;
 
-    if (this.curriculumForm.invalid) {
+    if (this.curriculumForm.invalid || this.selectedDisciplines.length === 0) {
+      this.error = 'Preencha todos os campos obrigatórios e adicione pelo menos uma disciplina.';
+      return;
+    }
+
+    // Validação de duplicidade no frontend
+    const formValue = this.curriculumForm.value;
+    const isDuplicate = this.curriculums.some(c =>
+      c.courseId === formValue.courseId &&
+      c.semesterId === formValue.semesterId &&
+      (!this.isEditMode || c.id !== this.curriculumId)
+    );
+    if (isDuplicate) {
+      this.error = 'Já existe uma matriz curricular para este curso e semestre.';
       return;
     }
 
     this.loading = true;
     this.error = '';
 
+    const payload = {
+      ...formValue,
+      disciplines: this.selectedDisciplines.map((d: any) => ({
+        disciplineId: d.id,
+        ordering: d.ordering
+      }))
+    };
+
     if (this.isEditMode && this.curriculumId) {
-      this.updateCurriculum();
+      this.updateCurriculum(payload);
     } else {
-      this.createCurriculum();
+      this.createCurriculum(payload);
     }
   }
 
-  createCurriculum(): void {
-    this.curriculumService.createCurriculum(this.curriculumForm.value).subscribe({
+  createCurriculum(payload: any): void {
+    this.curriculumService.createCurriculum(payload).subscribe({
       next: () => {
         this.loading = false;
         this.router.navigate(['/coordinator/curriculums']);
       },
       error: (err) => {
-        this.error = 'Erro ao criar matriz curricular. Por favor, tente novamente.';
+        if (err?.error?.message?.includes('matriz curricular para este curso e semestre')) {
+          this.error = 'Já existe uma matriz curricular para este curso e semestre.';
+        } else {
+          this.error = 'Erro ao criar matriz curricular. Por favor, tente novamente.';
+        }
         this.loading = false;
         console.error('Erro ao criar matriz curricular:', err);
       }
     });
   }
 
-  updateCurriculum(): void {
+  updateCurriculum(payload: any): void {
     if (!this.curriculumId) return;
 
-    this.curriculumService.updateCurriculum(this.curriculumId, this.curriculumForm.value).subscribe({
+    this.curriculumService.updateCurriculum(this.curriculumId, payload).subscribe({
       next: () => {
         this.loading = false;
         this.router.navigate(['/coordinator/curriculums']);

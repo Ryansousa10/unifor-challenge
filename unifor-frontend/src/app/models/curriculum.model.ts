@@ -34,3 +34,18 @@ export interface CurriculumWithDisciplines {
     optional: boolean;
   }[];
 }
+
+export interface CurriculumDisc {
+  disciplineId: string;
+  ordering: number;
+}
+
+export interface Curriculum {
+  id: string;
+  courseId: string;
+  semesterId: string;
+  name: string;
+  description: string;
+  active: boolean;
+  disciplines: CurriculumDisc[];
+}

@@ -2,19 +2,18 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { ViewComponent } from './view.component';
+import { FormsModule } from '@angular/forms';
 
 // Definindo as rotas
 const routes: Routes = [
   {
+    path: 'curriculums',
+    component: ViewComponent
+  },
+  {
     path: '',
-    component: ViewComponent,
-    children: [
-      { path: '', redirectTo: 'curriculums', pathMatch: 'full' },
-      {
-        path: 'curriculums',
-        loadChildren: () => import('./curriculum/curriculum-view.module').then(m => m.CurriculumViewModule)
-      }
-    ]
+    redirectTo: 'curriculums',
+    pathMatch: 'full'
   }
 ];
 
@@ -24,7 +23,8 @@ const routes: Routes = [
   ],
   imports: [
     CommonModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    FormsModule
   ]
 })
 export class ViewModule { }

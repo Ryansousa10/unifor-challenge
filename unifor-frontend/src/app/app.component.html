@@ -1,6 +1,6 @@
 <div class="container">
   <header class="header">
-    <div class="logo-container">
+    <div class="logo-container" style="cursor:pointer" (click)="goToDashboard()">
       <i class="fas fa-graduation-cap logo-icon"></i>
       <h1>{{ title }}</h1>
     </div>
@@ -21,7 +21,7 @@
       <a routerLink="/student" routerLinkActive="active" *ngIf="hasRole('ALUNO')">
         <i class="fas fa-user-graduate"></i> Aluno
       </a>
-      <a routerLink="/view/curriculum" routerLinkActive="active">
+      <a routerLink="/view/curriculums" routerLinkActive="active">
         <i class="fas fa-book"></i> Currículos
       </a>
     </nav>
@@ -76,7 +76,7 @@
       <a routerLink="/student" routerLinkActive="active" *ngIf="hasRole('ALUNO')" (click)="toggleMobileMenu()">
         <i class="fas fa-user-graduate"></i> Aluno
       </a>
-      <a routerLink="/view/curriculum" routerLinkActive="active" (click)="toggleMobileMenu()">
+      <a routerLink="/view/curriculums" routerLinkActive="active" (click)="toggleMobileMenu()">
         <i class="fas fa-book"></i> Currículos
       </a>
     </nav>
