@@ -97,6 +97,20 @@ public class CurriculumService {
         }
         existing.setCourse(course);
         existing.setSemester(semester);
+        existing.setName(dto.getName());
+        existing.setDescription(dto.getDescription());
+        existing.setActive(dto.getActive());
+        existing.persist();
+        CurricDisc.delete("curriculumId", existing.getId());
+        if (dto.getDisciplines() != null) {
+            for (var discDto : dto.getDisciplines()) {
+                CurricDisc curricDisc = new CurricDisc();
+                curricDisc.setCurriculumId(existing.getId());
+                curricDisc.setDisciplineId(discDto.getDisciplineId());
+                curricDisc.setOrdering(discDto.getOrdering());
+                curricDisc.persist();
+            }
+        }
         return toResponseDTO(existing);
     }
 
@@ -116,8 +130,7 @@ public class CurriculumService {
         dto.setName(curriculum.getName());
         dto.setDescription(curriculum.getDescription());
         dto.setActive(curriculum.getActive());
-        // Buscar as disciplinas vinculadas
-        List<CurricDisc> curricDiscs = CurricDisc.find("curriculumId", curriculum.getId()).list();
+        List<CurricDisc> curricDiscs = CurricDisc.find("curriculumId = ?1 order by ordering", curriculum.getId()).list();
         List<CurricDiscResponseDTO> discDTOs = curricDiscs.stream().map(cd -> {
             CurricDiscResponseDTO d = new CurricDiscResponseDTO();
             d.setCurriculumId(cd.getCurriculumId());
