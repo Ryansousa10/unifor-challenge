@@ -85,6 +85,15 @@ services:
       unifor-db:
         condition: service_healthy
 
+  frontend:
+    build:
+      context: ./unifor-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+
 volumes:
   keycloak-db-data:
   unifor-db-data:
