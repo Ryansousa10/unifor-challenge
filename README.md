@@ -1,5 +1,3 @@
-# Sistema de Gestão Acadêmica - UNIFOR Backend
-
 Este é o backend do sistema de gestão acadêmica do desafio UNIFOR, uma aplicação robusta desenvolvida com Quarkus, PostgreSQL e autenticação via Keycloak, oferecendo uma gestão completa de usuários, perfis e entidades acadêmicas.
 
 ## 📋 Índice
@@ -16,15 +14,6 @@ Este é o backend do sistema de gestão acadêmica do desafio UNIFOR, uma aplica
 - [Monitoramento](#-monitoramento)
 - [Licença](#-licença)
 
-## 🏗 Arquitetura
-
-O sistema é composto por quatro serviços Docker:
-
-* **Keycloak-DB**: PostgreSQL para armazenar dados do Keycloak
-* **Keycloak**: Servidor de autenticação e autorização (realm `unifor`)
-* **Unifor-DB**: PostgreSQL para dados da aplicação
-* **Backend**: Aplicação Quarkus escrita em Java 17
-* **Frontend**: Aplicação Angular (não incluída neste repositório, mas mencionada para contexto)
 
 ## ✨ Funcionalidades
 
@@ -41,6 +30,19 @@ O sistema oferece gestão completa de:
   - Semestres letivos
   - Disciplinas
   - Matrizes curriculares
+
+
+## 🏗 Arquitetura
+
+O sistema é composto por quatro serviços Docker:
+
+* **Keycloak-DB**: PostgreSQL para armazenar dados do Keycloak
+* **Keycloak**: Servidor de autenticação e autorização (realm `unifor`)
+* **Unifor-DB**: PostgreSQL para dados da aplicação
+* **Backend**: Aplicação Quarkus escrita em Java 17
+* **Frontend**: Aplicação Angular (não incluída neste repositório, mas mencionada para contexto)
+
+  <img width="2590" height="1045" alt="ryan" src="https://github.com/user-attachments/assets/b0aa7557-ba83-426b-8206-72f905b6bda8" />
 
 ## 🛠 Tecnologias
 
