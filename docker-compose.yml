@@ -41,7 +41,7 @@ services:
       - "8080:8080"
       - "9000:9000"
     volumes:
-      - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
+      - ./keycloak:/opt/keycloak/data/import
     healthcheck:
       test: ["CMD-SHELL", "/opt/keycloak/bin/kc.sh", "show-health"]
       interval: 10s
